@@ -1,0 +1,10 @@
+/bin
+/lib
+/reports
+
+/.externalToolBuilders
+/.project
+/.manager
+/.classpath
+/.settings
+
