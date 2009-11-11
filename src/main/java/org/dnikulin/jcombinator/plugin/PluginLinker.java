@@ -77,17 +77,15 @@ public class PluginLinker {
      * @param slot
      *            Plugin slot
      */
-    public boolean addPluginSlot(PluginSlot slot) {
-        synchronized (slots) {
-            if (slots.contains(slot))
-                return false;
+    public synchronized boolean addPluginSlot(PluginSlot slot) {
+        if (slots.contains(slot))
+            return false;
 
-            slots.add(slot);
+        slots.add(slot);
 
-            String name = slot.getPluginSlotName();
-            logger.print("Registered plugin slot '" + name + "'");
-            return true;
-        }
+        String name = slot.getPluginSlotName();
+        logger.print("Registered plugin slot '" + name + "'");
+        return true;
     }
 
     /**
@@ -96,10 +94,8 @@ public class PluginLinker {
      * 
      * @return Slot list copy
      */
-    public List<PluginSlot> getPluginSlots() {
-        synchronized (slots) {
-            return new ArrayList<PluginSlot>(slots);
-        }
+    public synchronized List<PluginSlot> getPluginSlots() {
+        return new ArrayList<PluginSlot>(slots);
     }
 
     /**
@@ -108,17 +104,15 @@ public class PluginLinker {
      * @param node
      *            Plugin node
      */
-    public boolean addPluginNode(PluginNode node) {
-        synchronized (nodes) {
-            if (nodes.contains(node))
-                return false;
+    public synchronized boolean addPluginNode(PluginNode node) {
+        if (nodes.contains(node))
+            return false;
 
-            nodes.add(node);
+        nodes.add(node);
 
-            String name = node.getPluginName();
-            logger.print("Registered plugin node '" + name + "'");
-            return true;
-        }
+        String name = node.getPluginName();
+        logger.print("Registered plugin node '" + name + "'");
+        return true;
     }
 
     /**
@@ -127,15 +121,13 @@ public class PluginLinker {
      * 
      * @return Node list copy
      */
-    public List<PluginNode> getPluginNodes() {
-        synchronized (nodes) {
-            return new ArrayList<PluginNode>(nodes);
-        }
+    public synchronized List<PluginNode> getPluginNodes() {
+        return new ArrayList<PluginNode>(nodes);
     }
 
     /**
      * Determine if a plugin slot is compatible with a plugin node.
-     *
+     * 
      * @param slot
      *            Plugin slot
      * @param node
