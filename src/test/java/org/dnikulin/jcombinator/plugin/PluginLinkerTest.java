@@ -27,6 +27,7 @@ package org.dnikulin.jcombinator.plugin;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -142,5 +143,51 @@ public class PluginLinkerTest {
         nodes.clear();
         assertFalse(linker.addPluginNode(node1));
         assertFalse(linker.addPluginNode(node2));
+    }
+
+    /** Linker must be able to determine slot/node compatibility. */
+    @Test
+    public void testIsCompatible() {
+        PluginSlot slot1 = NullPluginSlot.INSTANCE;
+        PluginNode node1 = NullPluginNode.INSTANCE;
+
+        PluginSlot slot2 = new NullPluginSlot2();
+        PluginNode node2 = new NullPluginNode2();
+        PluginNode node3 = new NullPluginNode3();
+
+        // First, verify class identities
+        assertSame(slot1.getPluginInterface(), node1.getClass());
+        assertSame(slot2.getPluginInterface(), node2.getClass());
+        assertNotSame(node1.getClass(), node2.getClass());
+        assertNotSame(node1.getClass(), node3.getClass());
+        assertNotSame(node2.getClass(), node3.getClass());
+
+        // Must be compatible because class is identical
+        assertTrue(PluginLinker.isCompatible(slot1, node1));
+
+        // Must be compatible because class is subclass
+        assertTrue(PluginLinker.isCompatible(slot1, node2));
+
+        // Must be compatible because class is identical
+        assertTrue(PluginLinker.isCompatible(slot2, node2));
+
+        // Must be incompatible because class is superclass
+        assertFalse(PluginLinker.isCompatible(slot2, node1));
+
+        // Must be incompatible because class is a different child class
+        assertFalse(PluginLinker.isCompatible(slot2, node3));
+    }
+
+    private static class NullPluginNode2 extends NullPluginNode {
+    }
+
+    private static class NullPluginNode3 extends NullPluginNode {
+    }
+
+    private static class NullPluginSlot2 extends NullPluginSlot {
+        @Override
+        public Class<? extends PluginNode> getPluginInterface() {
+            return NullPluginNode2.class;
+        };
     }
 }

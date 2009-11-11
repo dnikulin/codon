@@ -132,4 +132,17 @@ public class PluginLinker {
             return new ArrayList<PluginNode>(nodes);
         }
     }
+
+    /**
+     * Determine if a plugin slot is compatible with a plugin node.
+     *
+     * @param slot
+     *            Plugin slot
+     * @param node
+     *            Plugin node
+     * @return true if the slot and node are compatible
+     */
+    public static boolean isCompatible(PluginSlot slot, PluginNode node) {
+        return slot.getPluginInterface().isAssignableFrom(node.getClass());
+    }
 }
