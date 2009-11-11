@@ -28,17 +28,27 @@ import java.io.PrintStream;
 
 /** A LineLogger printing to a PrintStream. */
 public class PrintLogger implements LineLogger {
+    /** PrintLogger that prints to System.out */
     public static final PrintLogger SYSOUT = new PrintLogger(System.out);
+
+    /** PrintLogger that prints to System.err */
     public static final PrintLogger SYSERR = new PrintLogger(System.err);
 
     private final PrintStream stream;
 
+    /** Construct a PrintLogger that prints to System.out */
     public PrintLogger() {
         this(System.out);
     }
 
-    public PrintLogger(PrintStream _stream) {
-        stream = _stream;
+    /**
+     * Construct a PrintLogger that prints to the given stream
+     * 
+     * @param stream
+     *            The stream to print to
+     */
+    public PrintLogger(PrintStream stream) {
+        this.stream = stream;
     }
 
     @Override
