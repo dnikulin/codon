@@ -202,9 +202,9 @@ public class PluginLinkerTest {
         assertEquals(2, log.getCount());
     }
 
-    /** Linker must be able to register installed plugins. */
+    /** Linker must be able to auto-install when adding nodes. */
     @Test
-    public void testRegisterPlugin() {
+    public void testSlotAutoInstall() {
         CountingLogger log = new CountingLogger();
         PluginLinker linker = new PluginLinker(log);
 
@@ -216,32 +216,59 @@ public class PluginLinkerTest {
         // Must not log anything yet
         assertEquals(0, log.getCount());
 
-        // Must return true when adding a new slot or node
+        // Must return true when adding new slots
         // Must log exactly once per addition
-        assertTrue(linker.addPluginSlot(slot1)); // slot 0
-        assertTrue(linker.addPluginSlot(slot2)); // slot 1
-        assertTrue(linker.addPluginNode(node1)); // node 0
-        assertTrue(linker.addPluginNode(node2)); // node 1
+        assertTrue(linker.addPluginSlot(slot1));
+        assertEquals(1, log.getCount());
+        assertTrue(linker.addPluginSlot(slot2));
+        assertEquals(2, log.getCount());
+
+        // Must return true and install into working slot, logging for both
+        assertTrue(linker.addPluginNode(node1));
         assertEquals(4, log.getCount());
 
-        // Must return true when first installing a working plugin
-        // Must log exactly once per installation
-        assertTrue(linker.installAndRegister(0, 0));
+        // Must return false and not log for re-add
+        assertFalse(linker.addPluginNode(node1));
+        assertEquals(4, log.getCount());
+
+        // Must return true, install into working slot,
+        // and fail for non-working slot, logging for all
+        assertTrue(linker.addPluginNode(node2));
+        assertEquals(7, log.getCount());
+    }
+
+    /** Linker must be able to auto-install when adding slots. */
+    @Test
+    public void testNodeAutoInstall() {
+        CountingLogger log = new CountingLogger();
+        PluginLinker linker = new PluginLinker(log);
+
+        PluginSlot slot1 = NullPluginSlot.INSTANCE;
+        PluginNode node1 = NullPluginNode.INSTANCE;
+        PluginSlot slot2 = new NullPluginSlot2();
+        PluginNode node2 = new NullPluginNode2();
+
+        // Must not log anything yet
+        assertEquals(0, log.getCount());
+
+        // Must return true when adding new nodes
+        // Must log exactly once per addition
+        assertTrue(linker.addPluginNode(node1));
+        assertEquals(1, log.getCount());
+        assertTrue(linker.addPluginNode(node2));
+        assertEquals(2, log.getCount());
+
+        // Must return true and install both plugins, logging for all
+        assertTrue(linker.addPluginSlot(slot1));
         assertEquals(5, log.getCount());
-        assertTrue(linker.installAndRegister(0, 1));
-        assertEquals(6, log.getCount());
 
-        // Must return false when re-installing a plugin, and not log
-        assertFalse(linker.installAndRegister(0, 0));
-        assertFalse(linker.installAndRegister(0, 1));
-        assertEquals(6, log.getCount());
+        // Must return false and not log for re-add
+        assertFalse(linker.addPluginSlot(slot1));
+        assertEquals(5, log.getCount());
 
-        // Must return false when installing an incompatible plugin, and not log
-        assertFalse(linker.installAndRegister(1, 0));
-        assertEquals(6, log.getCount());
-
-        // Must return false when installing a failing plugin, and log
-        assertFalse(linker.installAndRegister(1, 1));
+        // Must return true and fail to install for one node,
+        // logging for both
+        assertTrue(linker.addPluginSlot(slot2));
         assertEquals(7, log.getCount());
     }
 

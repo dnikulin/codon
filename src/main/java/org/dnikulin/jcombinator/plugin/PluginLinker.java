@@ -87,10 +87,15 @@ public class PluginLinker {
         if (slots.contains(slot))
             return false;
 
+        int islot = slots.size();
         slots.add(slot);
 
         String name = slot.getPluginSlotName();
         logger.print("Registered plugin slot '" + name + "'");
+
+        for (int inode = 0; inode < nodes.size(); inode++)
+            installAndRegister(islot, inode);
+
         return true;
     }
 
@@ -114,10 +119,15 @@ public class PluginLinker {
         if (nodes.contains(node))
             return false;
 
+        int inode = nodes.size();
         nodes.add(node);
 
         String name = node.getPluginName();
         logger.print("Registered plugin node '" + name + "'");
+
+        for (int islot = 0; islot < slots.size(); islot++)
+            installAndRegister(islot, inode);
+
         return true;
     }
 
