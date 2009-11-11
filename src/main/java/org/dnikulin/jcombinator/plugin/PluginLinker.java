@@ -24,10 +24,42 @@
 
 package org.dnikulin.jcombinator.plugin;
 
+import org.dnikulin.jcombinator.log.LineLogger;
+import org.dnikulin.jcombinator.log.NullLogger;
+
 /**
  * A plugin slot and node registry. Supports automatic type-safe plugin
  * installation.
  */
 public class PluginLinker {
+    private final LineLogger logger;
 
+    /**
+     * Construct a PluginLinker with the given line logger.
+     * 
+     * @param logger
+     *            Line logger
+     */
+    public PluginLinker(LineLogger logger) {
+        if (logger == null)
+            throw new NullPointerException("logger is null");
+
+        this.logger = logger;
+    }
+
+    /**
+     * Construct a PluginLinker with no line logger.
+     */
+    public PluginLinker() {
+        this(NullLogger.INSTANCE);
+    }
+
+    /**
+     * Query connected LineLogger.
+     * 
+     * @return Connected LineLogger
+     */
+    public LineLogger getLineLogger() {
+        return logger;
+    }
 }
