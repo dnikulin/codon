@@ -25,10 +25,16 @@
 package org.dnikulin.jcombinator.plugin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
+import org.dnikulin.jcombinator.log.CountingLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.log.PrintLogger;
+import org.dnikulin.jcombinator.plugin.mock.NullPluginSlot;
 import org.junit.Test;
 
 public class PluginLinkerTest {
@@ -58,5 +64,43 @@ public class PluginLinkerTest {
         }
 
         assertTrue(threw);
+    }
+
+    /** Linker must include a plugin slot list. */
+    @Test
+    public void testPluginSlotList() {
+        CountingLogger log = new CountingLogger();
+        PluginLinker linker = new PluginLinker(log);
+
+        PluginSlot slot1 = NullPluginSlot.INSTANCE;
+        PluginSlot slot2 = new NullPluginSlot();
+
+        // Must not log anything yet
+        assertEquals(0, log.getCount());
+
+        // Must return true when adding a new slot, and log exactly once
+        assertTrue(linker.addPluginSlot(slot1));
+        assertEquals(1, log.getCount());
+
+        assertTrue(linker.addPluginSlot(slot2));
+        assertEquals(2, log.getCount());
+
+        // Must return false when re-adding an old slot, and not log
+        assertFalse(linker.addPluginSlot(slot1));
+        assertEquals(2, log.getCount());
+        assertFalse(linker.addPluginSlot(slot2));
+        assertEquals(2, log.getCount());
+
+        // Must be able to return slot list
+        List<PluginSlot> slots = linker.getPluginSlots();
+        assertNotNull(slots);
+        assertEquals(2, slots.size());
+        assertTrue(slots.contains(slot1));
+        assertTrue(slots.contains(slot2));
+
+        // Slot list must be a copy, not reflected in the linker
+        slots.clear();
+        assertFalse(linker.addPluginSlot(slot1));
+        assertFalse(linker.addPluginSlot(slot2));
     }
 }

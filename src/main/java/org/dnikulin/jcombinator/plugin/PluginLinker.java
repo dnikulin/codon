@@ -24,6 +24,9 @@
 
 package org.dnikulin.jcombinator.plugin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
 
@@ -33,6 +36,7 @@ import org.dnikulin.jcombinator.log.NullLogger;
  */
 public class PluginLinker {
     private final LineLogger logger;
+    private final List<PluginSlot> slots;
 
     /**
      * Construct a PluginLinker with the given line logger.
@@ -45,6 +49,8 @@ public class PluginLinker {
             throw new NullPointerException("logger is null");
 
         this.logger = logger;
+
+        slots = new ArrayList<PluginSlot>();
     }
 
     /**
@@ -61,5 +67,36 @@ public class PluginLinker {
      */
     public LineLogger getLineLogger() {
         return logger;
+    }
+
+    /**
+     * Register a plugin slot. This slot will receive compatible plugins.
+     * 
+     * @param slot
+     *            Plugin slot
+     */
+    public boolean addPluginSlot(PluginSlot slot) {
+        synchronized (slots) {
+            if (slots.contains(slot))
+                return false;
+
+            slots.add(slot);
+
+            String name = slot.getPluginSlotName();
+            logger.print("Registered plugin slot '" + name + "'");
+            return true;
+        }
+    }
+
+    /**
+     * Return a copy of the plugin slot list. Changes to the returned list will
+     * not affect the internal slot list.
+     * 
+     * @return Slot list copy
+     */
+    public List<PluginSlot> getPluginSlots() {
+        synchronized (slots) {
+            return new ArrayList<PluginSlot>(slots);
+        }
     }
 }
