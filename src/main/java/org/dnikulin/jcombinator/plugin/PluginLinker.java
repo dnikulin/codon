@@ -26,6 +26,10 @@ package org.dnikulin.jcombinator.plugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
@@ -38,6 +42,7 @@ public class PluginLinker {
     private final LineLogger logger;
     private final List<PluginSlot> slots;
     private final List<PluginNode> nodes;
+    private final Map<Integer, Set<Integer>> installed;
 
     /**
      * Construct a PluginLinker with the given line logger.
@@ -53,6 +58,7 @@ public class PluginLinker {
 
         slots = new ArrayList<PluginSlot>();
         nodes = new ArrayList<PluginNode>();
+        installed = new TreeMap<Integer, Set<Integer>>();
     }
 
     /**
@@ -123,6 +129,31 @@ public class PluginLinker {
      */
     public synchronized List<PluginNode> getPluginNodes() {
         return new ArrayList<PluginNode>(nodes);
+    }
+
+    // Package-private
+    synchronized boolean installAndRegister(int islot, int inode) {
+        PluginSlot slot = slots.get(islot);
+        PluginNode node = nodes.get(inode);
+
+        if (isCompatible(slot, node) == false)
+            return false;
+
+        Set<Integer> installedNodes = installed.get(islot);
+
+        if (installedNodes == null) {
+            installedNodes = new TreeSet<Integer>();
+            installed.put(islot, installedNodes);
+        } else if (installedNodes.contains(inode)) {
+            return false;
+        }
+
+        if (installPlugin(slot, node)) {
+            installedNodes.add(inode);
+            return true;
+        }
+
+        return false;
     }
 
     // Package-private
