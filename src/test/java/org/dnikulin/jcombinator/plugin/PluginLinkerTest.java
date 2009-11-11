@@ -27,6 +27,7 @@ package org.dnikulin.jcombinator.plugin;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -43,14 +44,14 @@ public class PluginLinkerTest {
     @Test
     public void testConstructorDefault() {
         PluginLinker linker = new PluginLinker();
-        assertEquals(NullLogger.INSTANCE, linker.getLineLogger());
+        assertSame(NullLogger.INSTANCE, linker.getLineLogger());
     }
 
     /** Constructor with non-null logger must connect given logger. */
     @Test
     public void testConstructorArgument() {
         PluginLinker linker = new PluginLinker(PrintLogger.SYSOUT);
-        assertEquals(PrintLogger.SYSOUT, linker.getLineLogger());
+        assertSame(PrintLogger.SYSOUT, linker.getLineLogger());
     }
 
     /** Constructor with null logger must throw a NullPointerException. */
