@@ -34,6 +34,7 @@ import java.util.List;
 import org.dnikulin.jcombinator.log.CountingLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.log.PrintLogger;
+import org.dnikulin.jcombinator.plugin.mock.NullPluginNode;
 import org.dnikulin.jcombinator.plugin.mock.NullPluginSlot;
 import org.junit.Test;
 
@@ -102,5 +103,43 @@ public class PluginLinkerTest {
         slots.clear();
         assertFalse(linker.addPluginSlot(slot1));
         assertFalse(linker.addPluginSlot(slot2));
+    }
+
+    /** Linker must include a plugin node list. */
+    @Test
+    public void testPluginNodeList() {
+        CountingLogger log = new CountingLogger();
+        PluginLinker linker = new PluginLinker(log);
+
+        PluginNode node1 = NullPluginNode.INSTANCE;
+        PluginNode node2 = new NullPluginNode();
+
+        // Must not log anything yet
+        assertEquals(0, log.getCount());
+
+        // Must return true when adding a new node, and log exactly once
+        assertTrue(linker.addPluginNode(node1));
+        assertEquals(1, log.getCount());
+
+        assertTrue(linker.addPluginNode(node2));
+        assertEquals(2, log.getCount());
+
+        // Must return false when re-adding an old node, and not log
+        assertFalse(linker.addPluginNode(node1));
+        assertEquals(2, log.getCount());
+        assertFalse(linker.addPluginNode(node2));
+        assertEquals(2, log.getCount());
+
+        // Must be able to return node list
+        List<PluginNode> nodes = linker.getPluginNodes();
+        assertNotNull(nodes);
+        assertEquals(2, nodes.size());
+        assertTrue(nodes.contains(node1));
+        assertTrue(nodes.contains(node2));
+
+        // Node list must be a copy, not reflected in the linker
+        nodes.clear();
+        assertFalse(linker.addPluginNode(node1));
+        assertFalse(linker.addPluginNode(node2));
     }
 }

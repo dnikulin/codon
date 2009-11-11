@@ -37,6 +37,7 @@ import org.dnikulin.jcombinator.log.NullLogger;
 public class PluginLinker {
     private final LineLogger logger;
     private final List<PluginSlot> slots;
+    private final List<PluginNode> nodes;
 
     /**
      * Construct a PluginLinker with the given line logger.
@@ -51,6 +52,7 @@ public class PluginLinker {
         this.logger = logger;
 
         slots = new ArrayList<PluginSlot>();
+        nodes = new ArrayList<PluginNode>();
     }
 
     /**
@@ -97,6 +99,37 @@ public class PluginLinker {
     public List<PluginSlot> getPluginSlots() {
         synchronized (slots) {
             return new ArrayList<PluginSlot>(slots);
+        }
+    }
+
+    /**
+     * Register a plugin node. This node may be installed into compatible slots.
+     * 
+     * @param node
+     *            Plugin node
+     */
+    public boolean addPluginNode(PluginNode node) {
+        synchronized (nodes) {
+            if (nodes.contains(node))
+                return false;
+
+            nodes.add(node);
+
+            String name = node.getPluginName();
+            logger.print("Registered plugin node '" + name + "'");
+            return true;
+        }
+    }
+
+    /**
+     * Return a copy of the plugin node list. Changes to the returned list will
+     * not affect the internal node list.
+     * 
+     * @return Node list copy
+     */
+    public List<PluginNode> getPluginNodes() {
+        synchronized (nodes) {
+            return new ArrayList<PluginNode>(nodes);
         }
     }
 }
