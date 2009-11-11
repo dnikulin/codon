@@ -178,6 +178,30 @@ public class PluginLinkerTest {
         assertFalse(PluginLinker.isCompatible(slot2, node3));
     }
 
+    /** Linker must be able to install nodes into slots. */
+    @Test
+    public void testInstallPlugin() {
+        CountingLogger log = new CountingLogger();
+        PluginLinker linker = new PluginLinker(log);
+
+        PluginSlot slot1 = NullPluginSlot.INSTANCE;
+        PluginNode node1 = NullPluginNode.INSTANCE;
+        PluginSlot slot2 = new NullPluginSlot2();
+
+        // Must not log anything yet
+        assertEquals(0, log.getCount());
+
+        // Must install returning true if no exception is thrown
+        // Must log exactly once
+        assertTrue(linker.installPlugin(slot1, node1));
+        assertEquals(1, log.getCount());
+
+        // Must install returning false if an exception is thrown
+        // Must log exactly once
+        assertFalse(linker.installPlugin(slot2, node1));
+        assertEquals(2, log.getCount());
+    }
+
     private static class NullPluginNode2 extends NullPluginNode {
     }
 
@@ -188,6 +212,11 @@ public class PluginLinkerTest {
         @Override
         public Class<? extends PluginNode> getPluginInterface() {
             return NullPluginNode2.class;
+        }
+
+        @Override
+        public void installPlugin(PluginNode plugin) {
+            throw new NullPointerException();
         };
     }
 }

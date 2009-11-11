@@ -125,6 +125,23 @@ public class PluginLinker {
         return new ArrayList<PluginNode>(nodes);
     }
 
+    // Package-private
+    boolean installPlugin(PluginSlot slot, PluginNode node) {
+        String slotName = slot.getPluginSlotName();
+        String nodeName = node.getPluginName();
+        String combo = "'" + nodeName + "' into '" + slotName + "'";
+
+        try {
+            slot.installPlugin(node);
+            logger.print("Installed " + combo);
+            return true;
+        } catch (Exception ex) {
+            String msg = ex.getLocalizedMessage();
+            logger.print("Failed to install " + combo + ": " + msg);
+            return false;
+        }
+    }
+
     /**
      * Determine if a plugin slot is compatible with a plugin node.
      * 
