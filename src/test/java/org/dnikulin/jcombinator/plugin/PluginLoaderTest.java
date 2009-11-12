@@ -25,23 +25,55 @@
 package org.dnikulin.jcombinator.plugin;
 
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
+import org.dnikulin.jcombinator.log.NullLogger;
+import org.dnikulin.jcombinator.log.PrintLogger;
 import org.junit.Test;
 
 public class PluginLoaderTest {
     /**
      * Default constructor must use the system ClassLoader as a parent,
-     * constructor with ClassLoader argument must use it as the parent.
+     * constructor with ClassLoader argument must use it as the parent. Each
+     * must have null line logger.
      */
     @Test
-    public void testConstructor() {
+    public void testConstructorWithLogger() {
         PluginLoader parent = new PluginLoader();
         assertSame(ClassLoader.getSystemClassLoader(), parent.getParent());
+        assertSame(NullLogger.INSTANCE, parent.getLineLogger());
 
         PluginLoader child = new PluginLoader(parent);
         assertSame(parent, child.getParent());
+        assertSame(NullLogger.INSTANCE, child.getLineLogger());
 
-        PluginLoader withNull = new PluginLoader(null);
-        assertSame(null, withNull.getParent());
+        PluginLoader withNullParent = new PluginLoader((ClassLoader) null);
+        assertSame(null, withNullParent.getParent());
+        assertSame(NullLogger.INSTANCE, withNullParent.getLineLogger());
+    }
+
+    /** Constructors with given logger must connect that logger. */
+    @Test
+    public void testConstructorWithoutLogger() {
+        PluginLoader parent = new PluginLoader(PrintLogger.SYSOUT);
+        assertSame(PrintLogger.SYSOUT, parent.getLineLogger());
+
+        PluginLoader child = new PluginLoader(parent, PrintLogger.SYSERR);
+        assertSame(parent, child.getParent());
+        assertSame(PrintLogger.SYSERR, child.getLineLogger());
+    }
+
+    /** Constructor with null logger must throw a NullPointerException. */
+    @Test
+    public void testConstructorNullLogger() {
+        boolean threw = false;
+
+        try {
+            new PluginLoader(ClassLoader.getSystemClassLoader(), null);
+        } catch (NullPointerException ex) {
+            threw = true;
+        }
+
+        assertTrue(threw);
     }
 }

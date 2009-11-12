@@ -24,24 +24,70 @@
 
 package org.dnikulin.jcombinator.plugin;
 
+import org.dnikulin.jcombinator.log.LineLogger;
+import org.dnikulin.jcombinator.log.NullLogger;
+
 /**
  * A ClassLoader which imports from files and archives, combining many dynamic
  * paths into one tree.
  */
 public class PluginLoader extends ClassLoader {
+    private final LineLogger logger;
+
     /**
-     * Construct a PluginLoader with the default parent ClassLoader.
+     * Construct a PluginLoader with the given parent loader and line logger.
+     * 
+     * @param parent
+     *            Parent ClassLoader
+     * 
+     * @param logger
+     *            Line logger
      */
-    public PluginLoader() {
+    public PluginLoader(ClassLoader parent, LineLogger logger) {
+        super(parent);
+
+        if (logger == null)
+            throw new NullPointerException("logger is null");
+
+        this.logger = logger;
     }
 
     /**
-     * Construct a PluginLoader with the given parent ClassLoader.
+     * Construct a PluginLoader with the given parent ClassLoader and no line
+     * logger.
      * 
      * @param parent
-     *            Parent class loader.
+     *            Parent class loader
      */
     public PluginLoader(ClassLoader parent) {
-        super(parent);
+        this(parent, NullLogger.INSTANCE);
+    }
+
+    /**
+     * Construct a PluginLoader with the default parent ClassLoader and the
+     * given line logger.
+     * 
+     * @param logger
+     *            Line logger
+     */
+    public PluginLoader(LineLogger logger) {
+        this(getSystemClassLoader(), logger);
+    }
+
+    /**
+     * Construct a PluginLoader with the default parent ClassLoader and no line
+     * logger.
+     */
+    public PluginLoader() {
+        this(getSystemClassLoader(), NullLogger.INSTANCE);
+    }
+
+    /**
+     * Query connected LineLogger.
+     * 
+     * @return Connected LineLogger
+     */
+    public LineLogger getLineLogger() {
+        return logger;
     }
 }
