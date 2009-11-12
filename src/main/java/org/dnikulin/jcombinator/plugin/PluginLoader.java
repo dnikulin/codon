@@ -24,6 +24,10 @@
 
 package org.dnikulin.jcombinator.plugin;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
 
@@ -33,6 +37,7 @@ import org.dnikulin.jcombinator.log.NullLogger;
  */
 public class PluginLoader extends ClassLoader {
     private final LineLogger logger;
+    private final byte[] streamBuffer;
 
     /**
      * Construct a PluginLoader with the given parent loader and line logger.
@@ -50,6 +55,8 @@ public class PluginLoader extends ClassLoader {
             throw new NullPointerException("logger is null");
 
         this.logger = logger;
+
+        streamBuffer = new byte[8192];
     }
 
     /**
@@ -89,5 +96,17 @@ public class PluginLoader extends ClassLoader {
      */
     public LineLogger getLineLogger() {
         return logger;
+    }
+
+    // Package-private
+    synchronized byte[] readStream(InputStream stream) throws IOException {
+        ByteArrayOutputStream nbytes = new ByteArrayOutputStream();
+
+        int didread = 0;
+        while ((didread = stream.read(streamBuffer)) > 0)
+            nbytes.write(streamBuffer, 0, didread);
+
+        nbytes.close();
+        return nbytes.toByteArray();
     }
 }

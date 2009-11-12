@@ -24,8 +24,13 @@
 
 package org.dnikulin.jcombinator.plugin;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.log.PrintLogger;
@@ -75,5 +80,32 @@ public class PluginLoaderTest {
         }
 
         assertTrue(threw);
+    }
+
+    /** Must be able to read any byte stream into an array. */
+    public void testReadStream(int size) throws IOException {
+        byte[] data = new byte[size];
+
+        for (int i = 0; i < data.length; i++)
+            data[i] = (byte) i;
+
+        ByteArrayInputStream stream = new ByteArrayInputStream(data);
+        assertEquals(data.length, stream.available());
+
+        PluginLoader loader = new PluginLoader();
+        byte[] ndata = loader.readStream(stream);
+
+        assertEquals(data.length, ndata.length);
+        assertEquals(size, ndata.length);
+        assertArrayEquals(data, ndata);
+    }
+
+    /** Must be able to read any byte stream into an array. */
+    @Test
+    public void testReadStream() throws IOException {
+        testReadStream(7);
+        testReadStream(4 * 1024);
+        testReadStream(8 * 1024);
+        testReadStream(419713);
     }
 }
