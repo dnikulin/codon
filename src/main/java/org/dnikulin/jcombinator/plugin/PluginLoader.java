@@ -213,6 +213,46 @@ public class PluginLoader extends ClassLoader {
         }
     }
 
+    /**
+     * Import all files in a tree (starting with a single file or directory)
+     * recursively with a given prefix. Can be called for a package
+     * sub-hierarchy to restore correct package path.
+     * 
+     * @param root
+     *            Directory tree root
+     * @param head
+     *            Prefix of resource names
+     */
+    public synchronized void importTree(File root, String head) {
+        try {
+            if (root.isDirectory()) {
+                for (File child : root.listFiles()) {
+                    if (child.isDirectory()) {
+                        importTree(child, head + child.getName() + "/");
+                    } else {
+                        importTree(child, head);
+                    }
+                }
+            } else if (root.isFile() && root.canRead()) {
+                importFile(root, head);
+            }
+        } catch (IOException ex) {
+            // Ignore exception
+        }
+    }
+
+    /**
+     * Import all files in a tree (starting with a single file or directory)
+     * recursively. For classes, the root should be directly above the first
+     * package elemenet.
+     * 
+     * @param root
+     *            Directory tree root
+     */
+    public void importTree(File root) {
+        importTree(root, "");
+    }
+
     // Package-private
     synchronized byte[] getBytes(String path) {
         return bytes.get(path);

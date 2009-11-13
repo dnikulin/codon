@@ -28,11 +28,11 @@ import static org.dnikulin.jcombinator.plugin.PluginLoader.classToPath;
 import static org.dnikulin.jcombinator.plugin.PluginLoader.pathToClass;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -185,12 +185,14 @@ public class PluginLoaderTest {
     }
 
     /**
-     * Must be able to silently import jar archives. Must be able to loadClass()
-     * from them.
+     * Shared import test routine.
+     * 
+     * @param code
+     *            Test-specific import code
      */
-    @Test
-    public void testImportClassJar() throws IOException, ClassNotFoundException {
-        String jarPath = "bin/jcombinator-testplugin.jar";
+    public void testImport(ImportCode code) throws IOException,
+            ClassNotFoundException {
+
         String nodePath = "test/TestPluginNode.class";
         String slotPath = "test/TestPluginSlot.class";
         String nodeClassName = "test.TestPluginNode";
@@ -209,13 +211,8 @@ public class PluginLoaderTest {
         assertEquals(2, log.getCount());
         log.reset();
 
-        // Establish and confirm jar file
-        File jarFile = new File(jarPath);
-        assertTrue(jarFile.exists());
-        assertTrue(jarFile.canRead());
-
-        // Must be able to import a jar file silently
-        loader.importJar(jarFile);
+        // Run import code, must be silent
+        code.run(loader);
         assertEquals(0, log.getCount());
 
         // Must store file contents (TestPluginNode)
@@ -239,6 +236,65 @@ public class PluginLoaderTest {
         assertNotSame(nodeClass, slotClass);
         assertEquals(0, log.getCount());
         assertEquals(slotClassName, slotClass.getName());
+    }
+
+    /**
+     * Must be able to silently import jar archives.
+     */
+    @Test
+    public void testImportClassJar() throws IOException, ClassNotFoundException {
+        testImport(new ImportCode() {
+            public void run(PluginLoader loader) throws IOException {
+                File root = new File("bin/jcombinator-testplugin.jar");
+                assertTrue(root.exists());
+                assertTrue(root.isFile());
+                assertTrue(root.canRead());
+                loader.importJar(root);
+            };
+        });
+    }
+
+    /**
+     * Must be able to silently import directory trees.
+     */
+    @Test
+    public void testImportTree() throws IOException, ClassNotFoundException {
+        testImport(new ImportCode() {
+            public void run(PluginLoader loader) throws IOException {
+                File root = new File("bin/testplugin");
+                assertTrue(root.exists());
+                assertTrue(root.isDirectory());
+                assertTrue(root.canRead());
+                loader.importTree(root);
+            };
+        });
+    }
+
+    /**
+     * Must be able to silently import single-file trees.
+     */
+    @Test
+    public void testImportFileTree() throws IOException, ClassNotFoundException {
+        testImport(new ImportCode() {
+            public void run(PluginLoader loader) throws IOException {
+                String base = "bin/testplugin/";
+                String head = "test/";
+
+                File nodeFile = new File(base + head + "TestPluginNode.class");
+                File slotFile = new File(base + head + "TestPluginSlot.class");
+
+                assertTrue(nodeFile.exists());
+                assertTrue(nodeFile.isFile());
+                assertTrue(nodeFile.canRead());
+
+                assertTrue(slotFile.exists());
+                assertTrue(slotFile.isFile());
+                assertTrue(slotFile.canRead());
+
+                loader.importTree(nodeFile, head);
+                loader.importTree(slotFile, head);
+            };
+        });
     }
 
     /**
@@ -303,5 +359,9 @@ public class PluginLoaderTest {
         for (int i = 0; i < data.length; i++)
             data[i] = (byte) i;
         return data;
+    }
+
+    private static interface ImportCode {
+        public void run(PluginLoader loader) throws IOException;
     }
 }
