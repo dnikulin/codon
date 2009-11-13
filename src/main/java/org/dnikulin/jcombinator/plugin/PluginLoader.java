@@ -102,6 +102,52 @@ public class PluginLoader extends ClassLoader {
         return logger;
     }
 
+    /**
+     * Load a class from stored bytes or parent loader.
+     * 
+     * @param className
+     *            Name of class to load
+     * @param resolve
+     *            Resolve class or not
+     * @return Loaded class
+     */
+    @Override
+    public synchronized Class<?> loadClass(String className, boolean resolve)
+            throws ClassNotFoundException {
+
+        Class<?> klass;
+
+        // Check for class for which bytes are available
+        byte[] classBytes = bytes.get(classToPath(className));
+
+        if (classBytes == null) {
+            try {
+                // Check for class in parent class loader instead
+                return getParent().loadClass(className);
+            } catch (ClassNotFoundException ex) {
+                logger.print("Loading class " + className
+                        + ", no bytes and not in parent loader");
+                throw ex;
+            }
+        }
+
+        // Bytes found, interpret as class
+        klass = defineClass(className, classBytes, 0, classBytes.length);
+
+        // Interpretation failed
+        if (klass == null) {
+            String msg = "Failed to interpret bytes for " + className;
+            logger.print(msg);
+            throw new ClassNotFoundException(msg);
+        }
+
+        // Resolve if asked
+        if (resolve)
+            resolveClass(klass);
+
+        return klass;
+    }
+
     // Package-private
     synchronized byte[] readStream(InputStream stream) throws IOException {
         ByteArrayOutputStream nbytes = new ByteArrayOutputStream();

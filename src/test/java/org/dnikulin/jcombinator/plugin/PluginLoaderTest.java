@@ -24,17 +24,17 @@
 
 package org.dnikulin.jcombinator.plugin;
 
+import static org.dnikulin.jcombinator.plugin.PluginLoader.classToPath;
+import static org.dnikulin.jcombinator.plugin.PluginLoader.pathToClass;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import static org.dnikulin.jcombinator.plugin.PluginLoader.classToPath;
-import static org.dnikulin.jcombinator.plugin.PluginLoader.pathToClass;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import org.dnikulin.jcombinator.log.CountingLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.log.PrintLogger;
 import org.junit.Test;
@@ -130,5 +130,32 @@ public class PluginLoaderTest {
     public void testPathToClass() {
         assertEquals("Test", pathToClass("Test.class"));
         assertEquals("org.test.Test", pathToClass("org/test/Test.class"));
+    }
+
+    @Test
+    public void testLoadClassWhenEmpty() throws ClassNotFoundException {
+        CountingLogger log = new CountingLogger();
+        PluginLoader loader = new PluginLoader(log);
+
+        // Re-check constructor, in case tests are run out of order
+        assertSame(ClassLoader.getSystemClassLoader(), loader.getParent());
+        assertSame(log, loader.getLineLogger());
+
+        // Must be able to load from parent without exceptions or logging
+        Class<?> stringClass = loader.loadClass("java.lang.String");
+        assertSame(String.class, stringClass);
+        assertEquals(0, log.getCount());
+
+        // Must log and throw for unavailable class
+        boolean threw = false;
+
+        try {
+            loader.loadClass("org.NoSuchClass");
+        } catch (ClassNotFoundException ex) {
+            threw = true;
+        }
+
+        assertTrue(threw);
+        assertEquals(1, log.getCount());
     }
 }
