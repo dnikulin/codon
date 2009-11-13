@@ -27,6 +27,8 @@ package org.dnikulin.jcombinator.plugin;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
@@ -38,6 +40,7 @@ import org.dnikulin.jcombinator.log.NullLogger;
 public class PluginLoader extends ClassLoader {
     private final LineLogger logger;
     private final byte[] streamBuffer;
+    private final Map<String, byte[]> bytes;
 
     /**
      * Construct a PluginLoader with the given parent loader and line logger.
@@ -57,6 +60,7 @@ public class PluginLoader extends ClassLoader {
         this.logger = logger;
 
         streamBuffer = new byte[8192];
+        bytes = new HashMap<String, byte[]>();
     }
 
     /**
