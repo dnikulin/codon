@@ -12,6 +12,11 @@
         <pathelement location="bin/test" />
     </path>
 
+    <path id="classpath-testplugin">
+        <pathelement location="bin/main" />
+        <pathelement location="bin/testplugin" />
+    </path>
+
     <!-- Macro compiling a source dierctory -->
     <macrodef name="compile">
         <attribute name="name" />
@@ -40,9 +45,11 @@
     <target depends="init" name="build-project">
         <compile name="main" />
         <compile name="test" />
+        <compile name="testplugin" />
 
         <jar destfile="bin/jcombinator.jar" basedir="bin/main" />
         <jar destfile="bin/jcombinator-test.jar" basedir="bin/test" />
+        <jar destfile="bin/jcombinator-testplugin.jar" basedir="bin/testplugin" />
     </target>
 
     <target depends="build-project" name="test">
