@@ -109,4 +109,15 @@ public class PluginLoader extends ClassLoader {
         nbytes.close();
         return nbytes.toByteArray();
     }
+
+    /**
+     * Converts a class path such as org.test.Test to org/test/Test.class
+     * 
+     * @param className
+     *            Class name to convert
+     * @return Resource path
+     */
+    public static String classToPath(String className) {
+        return className.replace('.', '/') + ".class";
+    }
 }

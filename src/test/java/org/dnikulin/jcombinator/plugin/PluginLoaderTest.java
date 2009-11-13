@@ -29,6 +29,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import static org.dnikulin.jcombinator.plugin.PluginLoader.classToPath;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -107,5 +109,15 @@ public class PluginLoaderTest {
         testReadStream(4 * 1024);
         testReadStream(8 * 1024);
         testReadStream(419713);
+    }
+
+    /**
+     * Must be able to convert a class name to a resource path. Invalid inputs
+     * are unimportant.
+     */
+    @Test
+    public void testClassToPath() {
+        assertEquals("Test.class", classToPath("Test"));
+        assertEquals("org/test/Test.class", classToPath("org.test.Test"));
     }
 }
