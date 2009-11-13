@@ -120,4 +120,16 @@ public class PluginLoader extends ClassLoader {
     public static String classToPath(String className) {
         return className.replace('.', '/') + ".class";
     }
+
+    /**
+     * Converts a resource path such as org/test/Test.class to org.test.Test
+     * 
+     * @param path
+     *            Resource path to convert
+     * @return Class name
+     */
+    public static String pathToClass(String path) {
+        assert (path.endsWith(".class"));
+        return path.substring(0, path.length() - 6).replace('/', '.');
+    }
 }
