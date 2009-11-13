@@ -3,64 +3,64 @@
 <!-- JCombinator by Dmitri Nikulin -->
 
 <project basedir="." default="build" name="jcombinator">
-	<path id="classpath-main">
-		<pathelement location="bin/main" />
-	</path>
+    <path id="classpath-main">
+        <pathelement location="bin/main" />
+    </path>
 
-	<path id="classpath-test">
-		<pathelement location="bin/main" />
-		<pathelement location="bin/test" />
-	</path>
+    <path id="classpath-test">
+        <pathelement location="bin/main" />
+        <pathelement location="bin/test" />
+    </path>
 
-	<!-- Macro compiling a source dierctory -->
-	<macrodef name="compile">
-		<attribute name="name" />
-		<sequential>
-			<mkdir dir="bin/@{name}" />
+    <!-- Macro compiling a source dierctory -->
+    <macrodef name="compile">
+        <attribute name="name" />
+        <sequential>
+            <mkdir dir="bin/@{name}" />
 
-			<!-- Copy all source to binary directory
+            <!-- Copy all source to binary directory
                  Keep the .java files for code navigation -->
-			<copy includeemptydirs="false" todir="bin/@{name}">
-				<fileset dir="src/@{name}/java" excludes="**/*.launch" />
-			</copy>
+            <copy includeemptydirs="false" todir="bin/@{name}">
+                <fileset dir="src/@{name}/java" excludes="**/*.launch" />
+            </copy>
 
-			<!-- Compile with given settings -->
-			<javac srcdir="bin/@{name}" destdir="bin/@{name}" classpathref="classpath-test" debug="true" debuglevel="source,lines,vars" source="1.6" target="1.6" />
-		</sequential>
-	</macrodef>
+            <!-- Compile with given settings -->
+            <javac srcdir="bin/@{name}" destdir="bin/@{name}" classpathref="classpath-test" debug="true" debuglevel="source,lines,vars" source="1.6" target="1.6" />
+        </sequential>
+    </macrodef>
 
-	<target name="init">
-		<mkdir dir="bin" />
-	</target>
+    <target name="init">
+        <mkdir dir="bin" />
+    </target>
 
-	<target name="clean">
-		<delete dir="bin" />
-	</target>
+    <target name="clean">
+        <delete dir="bin" />
+    </target>
 
-	<target depends="init" name="build-project">
-		<compile name="main" />
-		<compile name="test" />
+    <target depends="init" name="build-project">
+        <compile name="main" />
+        <compile name="test" />
 
-		<jar destfile="bin/jcombinator.jar" basedir="bin/main" />
-		<jar destfile="bin/jcombinator-test.jar" basedir="bin/test" />
-	</target>
+        <jar destfile="bin/jcombinator.jar" basedir="bin/main" />
+        <jar destfile="bin/jcombinator-test.jar" basedir="bin/test" />
+    </target>
 
-	<target depends="build-project" name="test">
-		<junit printsummary="yes" haltonfailure="yes">
-			<classpath refid="classpath-test" />
-			<formatter type="plain" />
+    <target depends="build-project" name="test">
+        <junit printsummary="yes" haltonfailure="yes">
+            <classpath refid="classpath-test" />
+            <formatter type="plain" />
 
-			<batchtest fork="yes" todir="reports" haltonfailure="yes">
-				<fileset dir="bin/test">
-					<include name="**/*Test*.java" />
-				</fileset>
-			</batchtest>
-		</junit>
-	</target>
+            <batchtest fork="yes" todir="reports" haltonfailure="yes">
+                <fileset dir="bin/test">
+                    <include name="**/*Test*.java" />
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
 
-	<!-- Misc targets -->
-	<target name="build-refprojects" />
-	<target name="build-subprojects" />
-	<target depends="clean" name="cleanall" />
-	<target depends="build-subprojects,build-project" name="build" />
+    <!-- Misc targets -->
+    <target name="build-refprojects" />
+    <target name="build-subprojects" />
+    <target depends="clean" name="cleanall" />
+    <target depends="build-subprojects,build-project" name="build" />
 </project>
