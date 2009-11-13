@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
@@ -171,9 +173,44 @@ public class PluginLoader extends ClassLoader {
      */
     public void importFile(File file, String pathHead) throws IOException {
         FileInputStream fis = new FileInputStream(file);
-        BufferedInputStream bis = new BufferedInputStream(fis);
-        importStream(bis, pathHead + file.getName());
-        bis.close();
+
+        try {
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            importStream(bis, pathHead + file.getName());
+            bis.close();
+        } finally {
+            fis.close();
+        }
+    }
+
+    /**
+     * Import all resources in a Jar.
+     * 
+     * @param file
+     *            jar file
+     */
+    public void importJar(File file) throws IOException {
+        BufferedInputStream buffer = null;
+        JarInputStream stream = null;
+
+        try {
+            buffer = new BufferedInputStream(new FileInputStream(file));
+            stream = new JarInputStream(buffer);
+
+            JarEntry entry = null;
+            while ((entry = stream.getNextJarEntry()) != null) {
+                if (entry.isDirectory())
+                    continue;
+
+                importStream(stream, entry.getName());
+            }
+        } finally {
+            if (stream != null)
+                stream.close();
+
+            if (buffer != null)
+                buffer.close();
+        }
     }
 
     // Package-private

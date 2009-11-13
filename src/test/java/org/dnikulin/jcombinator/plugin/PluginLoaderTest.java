@@ -29,8 +29,10 @@ import static org.dnikulin.jcombinator.plugin.PluginLoader.pathToClass;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -183,6 +185,63 @@ public class PluginLoaderTest {
     }
 
     /**
+     * Must be able to silently import jar archives. Must be able to loadClass()
+     * from them.
+     */
+    @Test
+    public void testImportClassJar() throws IOException, ClassNotFoundException {
+        String jarPath = "bin/jcombinator-testplugin.jar";
+        String nodePath = "test/TestPluginNode.class";
+        String slotPath = "test/TestPluginSlot.class";
+        String nodeClassName = "test.TestPluginNode";
+        String slotClassName = "test.TestPluginSlot";
+
+        CountingLogger log = new CountingLogger();
+        PluginLoader loader = new PluginLoader(log);
+
+        // Re-check constructor, in case tests are run out of order
+        assertSame(ClassLoader.getSystemClassLoader(), loader.getParent());
+        assertSame(log, loader.getLineLogger());
+
+        // Must not yet have either TestPlugin* class
+        assertFalse(tryLoadClass(loader, nodeClassName));
+        assertFalse(tryLoadClass(loader, slotClassName));
+        assertEquals(2, log.getCount());
+        log.reset();
+
+        // Establish and confirm jar file
+        File jarFile = new File(jarPath);
+        assertTrue(jarFile.exists());
+        assertTrue(jarFile.canRead());
+
+        // Must be able to import a jar file silently
+        loader.importJar(jarFile);
+        assertEquals(0, log.getCount());
+
+        // Must store file contents (TestPluginNode)
+        byte[] nodeBytes = loader.getBytes(nodePath);
+        assertNotNull(nodeBytes);
+        assertTrue(nodeBytes.length > 0);
+
+        // Must store file contents (TestPluginNode)
+        byte[] slotBytes = loader.getBytes(slotPath);
+        assertNotSame(nodeBytes, slotBytes);
+        assertNotNull(slotBytes);
+        assertTrue(slotBytes.length > 0);
+
+        // Must use stored bytes for loadClass (TestPluginNode)
+        Class<?> nodeClass = loader.loadClass(nodeClassName);
+        assertEquals(0, log.getCount());
+        assertEquals(nodeClassName, nodeClass.getName());
+
+        // Must use stored bytes for loadClass (TestPluginSlot)
+        Class<?> slotClass = loader.loadClass(slotClassName);
+        assertNotSame(nodeClass, slotClass);
+        assertEquals(0, log.getCount());
+        assertEquals(slotClassName, slotClass.getName());
+    }
+
+    /**
      * Must be able to convert a class name to a resource path. Invalid inputs
      * are unimportant.
      */
@@ -218,16 +277,18 @@ public class PluginLoaderTest {
         assertEquals(0, log.getCount());
 
         // Must log and throw for unavailable class
-        boolean threw = false;
+        assertFalse(tryLoadClass(loader, "org.NoSuchClass"));
+        assertEquals(1, log.getCount());
+    }
 
+    /** Attempt to load a class and check for ClassNotFoundException. */
+    public boolean tryLoadClass(ClassLoader loader, String className) {
         try {
             loader.loadClass("org.NoSuchClass");
+            return true;
         } catch (ClassNotFoundException ex) {
-            threw = true;
+            return false;
         }
-
-        assertTrue(threw);
-        assertEquals(1, log.getCount());
     }
 
     /**
