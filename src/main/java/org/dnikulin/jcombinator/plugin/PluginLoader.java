@@ -148,6 +148,24 @@ public class PluginLoader extends ClassLoader {
         return klass;
     }
 
+    /**
+     * Import a resource from an InputStream.
+     * 
+     * @param stream
+     *            Input stream to read
+     * @param path
+     *            Original resource path
+     */
+    public synchronized void importStream(InputStream stream, String path)
+            throws IOException {
+        bytes.put(path, readStream(stream));
+    }
+
+    // Package-private
+    synchronized byte[] getBytes(String path) {
+        return bytes.get(path);
+    }
+
     // Package-private
     synchronized byte[] readStream(InputStream stream) throws IOException {
         ByteArrayOutputStream nbytes = new ByteArrayOutputStream();
