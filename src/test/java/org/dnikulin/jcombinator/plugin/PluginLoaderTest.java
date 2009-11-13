@@ -45,6 +45,9 @@ import org.dnikulin.jcombinator.log.PrintLogger;
 import org.junit.Test;
 
 public class PluginLoaderTest {
+    private static final String NODE_FILE = "TestPluginNode.class";
+    private static final String SLOT_FILE = "TestPluginSlot.class";
+
     /**
      * Default constructor must use the system ClassLoader as a parent,
      * constructor with ClassLoader argument must use it as the parent. Each
@@ -148,7 +151,7 @@ public class PluginLoaderTest {
 
         // File paths
         String head = "test/";
-        String path = head + "TestPluginNode.class";
+        String path = head + NODE_FILE;
 
         // Establish and confirm file
         File file = new File("bin/testplugin/" + path);
@@ -193,8 +196,8 @@ public class PluginLoaderTest {
     public void testImport(ImportCode code) throws IOException,
             ClassNotFoundException {
 
-        String nodePath = "test/TestPluginNode.class";
-        String slotPath = "test/TestPluginSlot.class";
+        String nodePath = "test/" + NODE_FILE;
+        String slotPath = "test/" + SLOT_FILE;
         String nodeClassName = "test.TestPluginNode";
         String slotClassName = "test.TestPluginSlot";
 
@@ -280,8 +283,8 @@ public class PluginLoaderTest {
                 String base = "bin/testplugin/";
                 String head = "test/";
 
-                File nodeFile = new File(base + head + "TestPluginNode.class");
-                File slotFile = new File(base + head + "TestPluginSlot.class");
+                File nodeFile = new File(base + head + NODE_FILE);
+                File slotFile = new File(base + head + SLOT_FILE);
 
                 assertTrue(nodeFile.exists());
                 assertTrue(nodeFile.isFile());
