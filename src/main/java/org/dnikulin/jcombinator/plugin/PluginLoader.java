@@ -24,7 +24,10 @@
 
 package org.dnikulin.jcombinator.plugin;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -115,8 +118,6 @@ public class PluginLoader extends ClassLoader {
     public synchronized Class<?> loadClass(String className, boolean resolve)
             throws ClassNotFoundException {
 
-        Class<?> klass;
-
         // Check for class for which bytes are available
         byte[] classBytes = bytes.get(classToPath(className));
 
@@ -131,21 +132,20 @@ public class PluginLoader extends ClassLoader {
             }
         }
 
-        // Bytes found, interpret as class
-        klass = defineClass(className, classBytes, 0, classBytes.length);
+        try {
+            // Bytes found, interpret as class
+            Class<?> klass = defineClass(className, classBytes, 0,
+                    classBytes.length);
 
-        // Interpretation failed
-        if (klass == null) {
-            String msg = "Failed to interpret bytes for " + className;
-            logger.print(msg);
-            throw new ClassNotFoundException(msg);
+            // Resolve if asked
+            if (resolve)
+                resolveClass(klass);
+
+            return klass;
+        } catch (ClassFormatError ex) {
+            logger.print(ex.getLocalizedMessage());
+            throw ex;
         }
-
-        // Resolve if asked
-        if (resolve)
-            resolveClass(klass);
-
-        return klass;
     }
 
     /**
@@ -159,6 +159,21 @@ public class PluginLoader extends ClassLoader {
     public synchronized void importStream(InputStream stream, String path)
             throws IOException {
         bytes.put(path, readStream(stream));
+    }
+
+    /**
+     * Import a resource from a file.
+     * 
+     * @param file
+     *            File to read
+     * @param pathHead
+     *            Leading relative path elements (e.g. "org/test/")
+     */
+    public void importFile(File file, String pathHead) throws IOException {
+        FileInputStream fis = new FileInputStream(file);
+        BufferedInputStream bis = new BufferedInputStream(fis);
+        importStream(bis, pathHead + file.getName());
+        bis.close();
     }
 
     // Package-private

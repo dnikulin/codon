@@ -28,11 +28,14 @@ import static org.dnikulin.jcombinator.plugin.PluginLoader.classToPath;
 import static org.dnikulin.jcombinator.plugin.PluginLoader.pathToClass;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.dnikulin.jcombinator.log.CountingLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
@@ -124,6 +127,59 @@ public class PluginLoaderTest {
 
         assertEquals(data.length, ndata.length);
         assertArrayEquals(data, ndata);
+    }
+
+    /**
+     * Must be able to silently import single files. Must be able to loadClass()
+     * from them.
+     */
+    @Test
+    public void testImportClassFile() throws IOException,
+            ClassNotFoundException {
+
+        CountingLogger log = new CountingLogger();
+        PluginLoader loader = new PluginLoader(log);
+
+        // Re-check constructor, in case tests are run out of order
+        assertSame(ClassLoader.getSystemClassLoader(), loader.getParent());
+        assertSame(log, loader.getLineLogger());
+
+        // File paths
+        String head = "test/";
+        String path = head + "TestPluginNode.class";
+
+        // Establish and confirm file
+        File file = new File("bin/testplugin/" + path);
+        assertTrue(file.exists());
+        assertTrue(file.canRead());
+
+        // Must be able to import a single file silently
+        loader.importFile(file, head);
+        assertEquals(0, log.getCount());
+
+        // Must store file contents
+        byte[] data = loader.getBytes(path);
+        assertNotNull(data);
+        assertTrue(data.length > 0);
+
+        // Must use stored bytes for loadClass, and work silently
+        String className = "test.TestPluginNode";
+        Class<?> testClass = loader.loadClass(className);
+        assertEquals(0, log.getCount());
+        assertEquals(className, testClass.getName());
+
+        // Must log and throw for corrupted class
+        Arrays.fill(data, (byte) 7);
+        boolean threw = false;
+
+        try {
+            loader.loadClass(className);
+        } catch (ClassFormatError ex) {
+            threw = true;
+        }
+
+        assertTrue(threw);
+        assertEquals(1, log.getCount());
     }
 
     /**
