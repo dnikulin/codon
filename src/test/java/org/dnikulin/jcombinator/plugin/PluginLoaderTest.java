@@ -38,6 +38,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.dnikulin.jcombinator.log.CountingLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
@@ -360,6 +361,64 @@ public class PluginLoaderTest {
         assertTrue(threw);
         assertEquals(2, log.getCount());
         assertEquals(0, loader.getLoadedClasses().size());
+    }
+
+    /**
+     * Must be able to load imported classes by name suffix.
+     */
+    @Test
+    public void testLoadClasses() throws IOException, ClassNotFoundException {
+        CountingLogger log = new CountingLogger();
+        PluginLoader loader = new PluginLoader(log);
+
+        // Re-check constructor, in case tests are run out of order
+        assertSame(ClassLoader.getSystemClassLoader(), loader.getParent());
+        assertSame(log, loader.getLineLogger());
+        assertTrue(loader.getLoadedClasses().isEmpty());
+
+        // Run jar import code, must be silent
+        File root = new File("bin/jcombinator-testplugin.jar");
+        assertTrue(root.exists());
+        assertTrue(root.isFile());
+        assertTrue(root.canRead());
+        loader.importJar(root);
+        assertEquals(0, log.getCount());
+
+        // Must not load any classes if given "NoSuffix"
+        loader.loadClasses("NoSuffix");
+        assertTrue(loader.getLoadedClasses().isEmpty());
+
+        // Must load exactly three classes if given "PluginNode"
+        // (TestPluginNode, PluginNode and Object)
+        loader.loadClasses("PluginNode");
+        assertEquals(3, loader.getLoadedClasses().size());
+
+        // Subsequent invocation must be idempotent
+        loader.loadClasses("PluginNode");
+        assertEquals(3, loader.getLoadedClasses().size());
+
+        // Must load exactly two more classes if given "PluginSlot"
+        // (TestPluginSlot, PluginSlot)
+        loader.loadClasses("PluginSlot");
+        assertEquals(5, loader.getLoadedClasses().size());
+
+        // Must have logged nothing so far
+        assertEquals(0, log.getCount());
+
+        // Must have loaded correct classes from parent
+        List<Class<?>> loaded = loader.getLoadedClasses();
+        assertFalse(loaded.contains(null));
+        assertEquals(5, loaded.size());
+        assertTrue(loaded.contains(Object.class));
+        assertTrue(loaded.contains(PluginNode.class));
+        assertTrue(loaded.contains(PluginSlot.class));
+
+        // Must have loaded correct classes from imported bytes
+        Class<?> nodeClass = loader.loadClass("test.TestPluginNode");
+        Class<?> slotClass = loader.loadClass("test.TestPluginSlot");
+        assertNotSame(nodeClass, slotClass);
+        assertTrue(loaded.contains(nodeClass));
+        assertTrue(loaded.contains(slotClass));
     }
 
     /**

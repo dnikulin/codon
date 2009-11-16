@@ -164,6 +164,42 @@ public class PluginLoader extends ClassLoader {
     }
 
     /**
+     * Attempt to load classes from all matching .class resources available.
+     * 
+     * @param suffix
+     *            Class name suffix (e.g. PluginNode to match MyPluginNode and
+     *            YourPluginNode), empty string for all classes
+     */
+    public synchronized void loadClasses(String suffix) {
+        String suffixDotClass = suffix + ".class";
+
+        for (String path : bytes.keySet()) {
+            if (!path.endsWith(suffixDotClass))
+                continue;
+
+            String className = pathToClass(path);
+            if (classes.containsKey(className))
+                continue;
+
+            try {
+                byte[] classBytes = bytes.get(path);
+                assert (classBytes != null);
+
+                Class<?> klass = defineClass(className, classBytes, 0,
+                        classBytes.length);
+                assert (klass != null);
+
+                resolveClass(klass);
+                classes.put(className, klass);
+            } catch (NoClassDefFoundError er) {
+                // Dependency not found, ignore
+            } catch (ClassFormatError ex) {
+                // Corrupted class file, ignore
+            }
+        }
+    }
+
+    /**
      * Produce a list of all loaded classes, i.e. those for which loadClass()
      * was called.
      * 
