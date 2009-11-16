@@ -148,6 +148,7 @@ public class PluginLoaderTest {
         // Re-check constructor, in case tests are run out of order
         assertSame(ClassLoader.getSystemClassLoader(), loader.getParent());
         assertSame(log, loader.getLineLogger());
+        assertTrue(loader.getLoadedClasses().isEmpty());
 
         // File paths
         String head = "test/";
@@ -173,6 +174,9 @@ public class PluginLoaderTest {
         assertEquals(0, log.getCount());
         assertEquals(className, testClass.getName());
 
+        // Must have only loaded this class and its dependencies
+        assertEquals(3, loader.getLoadedClasses().size());
+
         // Must no longer attempt to parse class
         // Test by corrupting class bytes
         Arrays.fill(data, (byte) 7);
@@ -186,6 +190,9 @@ public class PluginLoaderTest {
 
         assertFalse(threw);
         assertEquals(0, log.getCount());
+
+        // Must have not loaded any additional classes
+        assertEquals(3, loader.getLoadedClasses().size());
     }
 
     /**
@@ -208,6 +215,7 @@ public class PluginLoaderTest {
         // Re-check constructor, in case tests are run out of order
         assertSame(ClassLoader.getSystemClassLoader(), loader.getParent());
         assertSame(log, loader.getLineLogger());
+        assertTrue(loader.getLoadedClasses().isEmpty());
 
         // Must not yet have either TestPlugin* class
         assertFalse(tryLoadClass(loader, nodeClassName));
@@ -240,6 +248,9 @@ public class PluginLoaderTest {
         assertNotSame(nodeClass, slotClass);
         assertEquals(0, log.getCount());
         assertEquals(slotClassName, slotClass.getName());
+
+        // Must have only loaded those classes and their dependencies
+        assertEquals(5, loader.getLoadedClasses().size());
     }
 
     /**
@@ -317,6 +328,7 @@ public class PluginLoaderTest {
         // Re-check constructor, in case tests are run out of order
         assertSame(ClassLoader.getSystemClassLoader(), loader.getParent());
         assertSame(log, loader.getLineLogger());
+        assertTrue(loader.getLoadedClasses().isEmpty());
 
         // Must not yet have either TestPlugin* class
         assertFalse(tryLoadClass(loader, nodeClassName));
@@ -347,6 +359,7 @@ public class PluginLoaderTest {
 
         assertTrue(threw);
         assertEquals(2, log.getCount());
+        assertEquals(0, loader.getLoadedClasses().size());
     }
 
     /**
@@ -378,15 +391,18 @@ public class PluginLoaderTest {
         // Re-check constructor, in case tests are run out of order
         assertSame(ClassLoader.getSystemClassLoader(), loader.getParent());
         assertSame(log, loader.getLineLogger());
+        assertTrue(loader.getLoadedClasses().isEmpty());
 
         // Must be able to load from parent without exceptions or logging
         Class<?> stringClass = loader.loadClass("java.lang.String");
         assertSame(String.class, stringClass);
         assertEquals(0, log.getCount());
+        assertEquals(1, loader.getLoadedClasses().size());
 
         // Must log and throw for unavailable class
         assertFalse(tryLoadClass(loader, "org.NoSuchClass"));
         assertEquals(1, log.getCount());
+        assertEquals(1, loader.getLoadedClasses().size());
     }
 
     /** Attempt to load a class and check for ClassNotFoundException. */

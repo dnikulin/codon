@@ -30,7 +30,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -159,6 +161,16 @@ public class PluginLoader extends ClassLoader {
             logger.print(ex.getLocalizedMessage());
             throw ex;
         }
+    }
+
+    /**
+     * Produce a list of all loaded classes, i.e. those for which loadClass()
+     * was called.
+     * 
+     * @return List of loaded classes
+     */
+    public List<Class<?>> getLoadedClasses() {
+        return new ArrayList<Class<?>>(classes.values());
     }
 
     /**
