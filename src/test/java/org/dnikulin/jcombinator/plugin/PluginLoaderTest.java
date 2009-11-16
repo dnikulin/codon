@@ -173,7 +173,8 @@ public class PluginLoaderTest {
         assertEquals(0, log.getCount());
         assertEquals(className, testClass.getName());
 
-        // Must log and throw for corrupted class
+        // Must no longer attempt to parse class
+        // Test by corrupting class bytes
         Arrays.fill(data, (byte) 7);
         boolean threw = false;
 
@@ -183,8 +184,8 @@ public class PluginLoaderTest {
             threw = true;
         }
 
-        assertTrue(threw);
-        assertEquals(1, log.getCount());
+        assertFalse(threw);
+        assertEquals(0, log.getCount());
     }
 
     /**
@@ -298,6 +299,54 @@ public class PluginLoaderTest {
                 loader.importTree(slotFile, head);
             };
         });
+    }
+
+    /**
+     * Must throw when loading corrupted class files.
+     */
+    @Test
+    public void testImportCorruptClassFile() throws IOException,
+            ClassNotFoundException {
+
+        String nodePath = "test/" + NODE_FILE;
+        String nodeClassName = "test.TestPluginNode";
+
+        CountingLogger log = new CountingLogger();
+        PluginLoader loader = new PluginLoader(log);
+
+        // Re-check constructor, in case tests are run out of order
+        assertSame(ClassLoader.getSystemClassLoader(), loader.getParent());
+        assertSame(log, loader.getLineLogger());
+
+        // Must not yet have either TestPlugin* class
+        assertFalse(tryLoadClass(loader, nodeClassName));
+        assertEquals(1, log.getCount());
+
+        // Run jar import code, must be silent
+        File root = new File("bin/jcombinator-testplugin.jar");
+        assertTrue(root.exists());
+        assertTrue(root.isFile());
+        assertTrue(root.canRead());
+        loader.importJar(root);
+        assertEquals(1, log.getCount());
+
+        // Must store file contents
+        byte[] nodeBytes = loader.getBytes(nodePath);
+        assertNotNull(nodeBytes);
+        assertTrue(nodeBytes.length > 0);
+
+        // Corrupt bytes
+        Arrays.fill(nodeBytes, (byte) 7);
+        boolean threw = false;
+
+        try {
+            loader.loadClass(nodeClassName);
+        } catch (ClassFormatError ex) {
+            threw = true;
+        }
+
+        assertTrue(threw);
+        assertEquals(2, log.getCount());
     }
 
     /**

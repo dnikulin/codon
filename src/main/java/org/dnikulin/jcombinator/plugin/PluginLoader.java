@@ -46,6 +46,7 @@ public class PluginLoader extends ClassLoader {
     private final LineLogger logger;
     private final byte[] streamBuffer;
     private final Map<String, byte[]> bytes;
+    private final Map<String, Class<?>> classes;
 
     /**
      * Construct a PluginLoader with the given parent loader and line logger.
@@ -66,6 +67,7 @@ public class PluginLoader extends ClassLoader {
 
         streamBuffer = new byte[8192];
         bytes = new HashMap<String, byte[]>();
+        classes = new HashMap<String, Class<?>>();
     }
 
     /**
@@ -120,13 +122,21 @@ public class PluginLoader extends ClassLoader {
     public synchronized Class<?> loadClass(String className, boolean resolve)
             throws ClassNotFoundException {
 
+        // Check for cached class
+        Class<?> klass = classes.get(className);
+        if (klass != null)
+            return klass;
+
         // Check for class for which bytes are available
         byte[] classBytes = bytes.get(classToPath(className));
 
         if (classBytes == null) {
             try {
                 // Check for class in parent class loader instead
-                return getParent().loadClass(className);
+                klass = getParent().loadClass(className);
+                assert (klass != null);
+                classes.put(className, klass);
+                return klass;
             } catch (ClassNotFoundException ex) {
                 logger.print("Loading class " + className
                         + ", no bytes and not in parent loader");
@@ -136,13 +146,14 @@ public class PluginLoader extends ClassLoader {
 
         try {
             // Bytes found, interpret as class
-            Class<?> klass = defineClass(className, classBytes, 0,
-                    classBytes.length);
+            klass = defineClass(className, classBytes, 0, classBytes.length);
+            assert (klass != null);
 
             // Resolve if asked
             if (resolve)
                 resolveClass(klass);
 
+            classes.put(className, klass);
             return klass;
         } catch (ClassFormatError ex) {
             logger.print(ex.getLocalizedMessage());
