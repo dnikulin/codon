@@ -45,6 +45,8 @@ import org.dnikulin.jcombinator.log.NullLogger;
  * paths into one tree.
  */
 public class PluginLoader extends ClassLoader {
+    public static final String NODE_SUFFIX = "PluginNode";
+
     private final LineLogger logger;
     private final byte[] streamBuffer;
     private final Map<String, byte[]> bytes;
@@ -310,6 +312,22 @@ public class PluginLoader extends ClassLoader {
      */
     public void importTree(File root) {
         importTree(root, "");
+    }
+
+    /**
+     * Load all classes with names ending in PluginNode, and submit <i>all</i>
+     * loaded classes to linker's makePluginNodes().
+     * 
+     * @param linker
+     *            Plugin linker
+     */
+    public void givePluginLinkerNodes(PluginLinker linker) {
+        // Load only classes with the node suffix name
+        loadClasses(NODE_SUFFIX);
+
+        // Give linker all classes for node construction
+        // Shortcut past getLoadedClasses()'s list constructor
+        linker.makePluginNodes(classes.values());
     }
 
     // Package-private

@@ -421,6 +421,57 @@ public class PluginLoaderTest {
         assertTrue(loaded.contains(slotClass));
     }
 
+    @Test
+    public void testGiveLinkerNodes() throws IOException,
+            ClassNotFoundException {
+
+        // Construct loader
+        CountingLogger loadlog = new CountingLogger();
+        PluginLoader loader = new PluginLoader(loadlog);
+
+        // Check loader constructor
+        assertSame(ClassLoader.getSystemClassLoader(), loader.getParent());
+        assertSame(loadlog, loader.getLineLogger());
+        assertTrue(loader.getLoadedClasses().isEmpty());
+
+        // Construct linker
+        CountingLogger linklog = new CountingLogger();
+        PluginLinker linker = new PluginLinker(linklog);
+
+        // Check linker constructor
+        assertSame(linklog, linker.getLineLogger());
+        assertTrue(linker.getPluginNodes().isEmpty());
+        assertTrue(linker.getPluginSlots().isEmpty());
+
+        // Run jar import code, must be silent
+        File root = new File("bin/jcombinator-testplugin.jar");
+        assertTrue(root.exists());
+        assertTrue(root.isFile());
+        assertTrue(root.canRead());
+        loader.importJar(root);
+        assertEquals(0, loadlog.getCount());
+
+        // Give linker node classes from loader
+        loader.givePluginLinkerNodes(linker);
+
+        // Loader must have logged nothing
+        // Linker must have logged that one node class was added
+        assertEquals(0, loadlog.getCount());
+        assertEquals(1, linklog.getCount());
+
+        // Linker must now have the node class
+        Class<?> nodeClass = loader.loadClass("test.TestPluginNode");
+        assertTrue(linker.hasPluginNodeForClass(nodeClass));
+
+        // Linker must now have the node instance
+        List<PluginNode> nodes = linker.getPluginNodes();
+        assertEquals(1, nodes.size());
+        assertSame(nodeClass, nodes.get(0).getClass());
+
+        // Linker must not have any slots
+        assertTrue(linker.getPluginSlots().isEmpty());
+    }
+
     /**
      * Must be able to convert a class name to a resource path. Invalid inputs
      * are unimportant.
