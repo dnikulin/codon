@@ -24,7 +24,9 @@
 
 package org.dnikulin.jcombinator.plugin;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -154,6 +156,48 @@ public class PluginLinker {
      */
     public synchronized boolean hasPluginNodeForClass(Class<?> klass) {
         return nodeClasses.contains(klass.getName());
+    }
+
+    /**
+     * Instantiate and add any plugin node classes that have no added instances.
+     * Only classes that implement PluginNode will be used.
+     * 
+     * @param classes
+     *            Collection of candidate classes
+     */
+    public synchronized void makePluginNodes(Collection<Class<?>> classes) {
+        for (Class<?> klass : classes) {
+            // Only consider PluginNode subclasses
+            if (!PluginNode.class.isAssignableFrom(klass))
+                continue;
+
+            // Cannot instantiate an interface
+            if (klass.isInterface())
+                continue;
+
+            // Cannot instantiate an abstract class
+            if (Modifier.isAbstract(klass.getModifiers()))
+                continue;
+
+            // Do not auto-add if an instance is already added
+            // (Whether or not it was added by this method!)
+            // This is the most expensive check so do it last
+            if (nodeClasses.contains(klass.getName()))
+                continue;
+
+            try {
+                Object nodeObject = klass.newInstance();
+                PluginNode node = (PluginNode) nodeObject;
+
+                boolean added = addPluginNode(node);
+                assert (added == true);
+                assert (nodeClasses.contains(klass.getName()));
+            } catch (Exception ex) {
+                String name = klass.getSimpleName();
+                String msg = ex.getLocalizedMessage();
+                logger.print("Failed to make " + name + ": " + msg);
+            }
+        }
     }
 
     // Package-private

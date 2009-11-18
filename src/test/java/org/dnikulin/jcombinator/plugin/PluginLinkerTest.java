@@ -31,6 +31,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dnikulin.jcombinator.log.CountingLogger;
@@ -284,10 +285,55 @@ public class PluginLinkerTest {
         assertEquals(7, log.getCount());
     }
 
-    private static class NullPluginNode2 extends NullPluginNode {
+    /** Linker must be able to automatically make nodes from classes. */
+    @Test
+    public void testMakeNodes() {
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+        classes.add(NullPluginNode.class);
+        classes.add(NullPluginNode2.class);
+        classes.add(String.class);
+
+        CountingLogger log = new CountingLogger();
+        PluginLinker linker = new PluginLinker(log);
+
+        PluginNode node = NullPluginNode.INSTANCE;
+
+        // Must not log anything yet
+        assertEquals(0, log.getCount());
+
+        // Must return true when adding new nodes
+        // Must log exactly once per addition
+        assertTrue(linker.addPluginNode(node));
+        assertEquals(1, log.getCount());
+
+        // Must have only the class added
+        assertTrue(linker.hasPluginNodeForClass(NullPluginNode.class));
+        assertFalse(linker.hasPluginNodeForClass(NullPluginNode2.class));
+
+        // Must be able to auto-add node from classes, and log for those added
+        linker.makePluginNodes(classes);
+        assertTrue(linker.hasPluginNodeForClass(NullPluginNode.class));
+        assertTrue(linker.hasPluginNodeForClass(NullPluginNode2.class));
+        assertFalse(linker.hasPluginNodeForClass(String.class));
+        assertEquals(2, log.getCount());
+
+        // Must log when instantiation fails
+        classes.add(NullPluginNode4.class);
+        linker.makePluginNodes(classes);
+        assertFalse(linker.hasPluginNodeForClass(NullPluginNode4.class));
+        assertEquals(3, log.getCount());
     }
 
-    private static class NullPluginNode3 extends NullPluginNode {
+    public static class NullPluginNode2 extends NullPluginNode {
+    }
+
+    public static class NullPluginNode3 extends NullPluginNode {
+    }
+
+    private static class NullPluginNode4 extends NullPluginNode {
+        private NullPluginNode4() {
+            // Will fail to create
+        }
     }
 
     private static class NullPluginSlot2 extends NullPluginSlot {
