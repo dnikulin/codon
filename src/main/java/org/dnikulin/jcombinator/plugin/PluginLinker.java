@@ -43,6 +43,7 @@ public class PluginLinker {
     private final List<PluginSlot> slots;
     private final List<PluginNode> nodes;
     private final Map<Integer, Set<Integer>> installed;
+    private final Set<String> nodeClasses;
 
     /**
      * Construct a PluginLinker with the given line logger.
@@ -59,6 +60,7 @@ public class PluginLinker {
         slots = new ArrayList<PluginSlot>();
         nodes = new ArrayList<PluginNode>();
         installed = new TreeMap<Integer, Set<Integer>>();
+        nodeClasses = new TreeSet<String>();
     }
 
     /**
@@ -120,6 +122,7 @@ public class PluginLinker {
             return false;
 
         int inode = nodes.size();
+        nodeClasses.add(node.getClass().getName());
         nodes.add(node);
 
         String name = node.getPluginName();
@@ -139,6 +142,18 @@ public class PluginLinker {
      */
     public synchronized List<PluginNode> getPluginNodes() {
         return new ArrayList<PluginNode>(nodes);
+    }
+
+    /**
+     * Check if the linker has registered at least one node of this precise
+     * class.
+     * 
+     * @param klass
+     *            Node class (exact, not superclass)
+     * @return true iff at least one node is registered with this exact class
+     */
+    public synchronized boolean hasPluginNodeForClass(Class<?> klass) {
+        return nodeClasses.contains(klass.getName());
     }
 
     // Package-private

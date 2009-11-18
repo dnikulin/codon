@@ -105,6 +105,10 @@ public class PluginLinkerTest {
         slots.clear();
         assertFalse(linker.addPluginSlot(slot1));
         assertFalse(linker.addPluginSlot(slot2));
+
+        // Must not consider slots in the node class check
+        assertFalse(linker.hasPluginNodeForClass(NullPluginSlot.class));
+        assertFalse(linker.hasPluginNodeForClass(NullPluginSlot2.class));
     }
 
     /** Linker must include a plugin node list. */
@@ -114,10 +118,14 @@ public class PluginLinkerTest {
         PluginLinker linker = new PluginLinker(log);
 
         PluginNode node1 = NullPluginNode.INSTANCE;
-        PluginNode node2 = new NullPluginNode();
+        PluginNode node2 = new NullPluginNode2();
 
         // Must not log anything yet
         assertEquals(0, log.getCount());
+
+        // Must recall which node classes are registered (nothing yet)
+        assertFalse(linker.hasPluginNodeForClass(NullPluginNode.class));
+        assertFalse(linker.hasPluginNodeForClass(NullPluginNode2.class));
 
         // Must return true when adding a new node, and log exactly once
         assertTrue(linker.addPluginNode(node1));
@@ -143,6 +151,10 @@ public class PluginLinkerTest {
         nodes.clear();
         assertFalse(linker.addPluginNode(node1));
         assertFalse(linker.addPluginNode(node2));
+
+        // Must recall which node classes are registered
+        assertTrue(linker.hasPluginNodeForClass(NullPluginNode.class));
+        assertTrue(linker.hasPluginNodeForClass(NullPluginNode2.class));
     }
 
     /** Linker must be able to determine slot/node compatibility. */
