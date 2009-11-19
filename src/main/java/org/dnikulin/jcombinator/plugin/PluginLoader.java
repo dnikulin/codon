@@ -59,15 +59,12 @@ public class PluginLoader extends ClassLoader {
      *            Parent ClassLoader
      * 
      * @param logger
-     *            Line logger
+     *            Line logger (may be null)
      */
     public PluginLoader(ClassLoader parent, LineLogger logger) {
         super(parent);
 
-        if (logger == null)
-            throw new NullPointerException("logger is null");
-
-        this.logger = logger;
+        this.logger = NullLogger.or(logger);
 
         streamBuffer = new byte[8192];
         bytes = new HashMap<String, byte[]>();
@@ -90,7 +87,7 @@ public class PluginLoader extends ClassLoader {
      * given line logger.
      * 
      * @param logger
-     *            Line logger
+     *            Line logger (may be null)
      */
     public PluginLoader(LineLogger logger) {
         this(getSystemClassLoader(), logger);

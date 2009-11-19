@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.dnikulin.jcombinator.log.CountingLogger;
+import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.log.PrintLogger;
 import org.junit.Test;
@@ -83,15 +84,13 @@ public class PluginLoaderTest {
     /** Constructor with null logger must throw a NullPointerException. */
     @Test
     public void testConstructorNullLogger() {
-        boolean threw = false;
+        ClassLoader sysloader = ClassLoader.getSystemClassLoader();
 
-        try {
-            new PluginLoader(ClassLoader.getSystemClassLoader(), null);
-        } catch (NullPointerException ex) {
-            threw = true;
-        }
+        PluginLoader loader1 = new PluginLoader(sysloader, null);
+        assertSame(NullLogger.INSTANCE, loader1.getLineLogger());
 
-        assertTrue(threw);
+        PluginLoader loader2 = new PluginLoader((LineLogger) null);
+        assertSame(NullLogger.INSTANCE, loader2.getLineLogger());
     }
 
     /** Must be able to read any byte stream into an array. */
