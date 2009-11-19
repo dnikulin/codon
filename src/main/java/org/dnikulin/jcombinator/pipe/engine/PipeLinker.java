@@ -30,9 +30,13 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
+import org.dnikulin.jcombinator.pipe.core.Consumer;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
+import org.dnikulin.jcombinator.pipe.core.Producer;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;
+import org.dnikulin.jcombinator.pipe.except.PipeNotFoundException;
+import org.dnikulin.jcombinator.pipe.except.PipeTypeException;
 
 /** A named pipe registry. Allows pipe lookup and connection by name. */
 public class PipeLinker {
@@ -98,6 +102,38 @@ public class PipeLinker {
      */
     public Pipe getPipe(String name) {
         return pipes.get(name);
+    }
+
+    /**
+     * Link pipes found by name.
+     * 
+     * @param producerName
+     *            Name of producer pipe
+     * @param consumerName
+     *            Name of consumer pipe
+     */
+    public void linkPipes(String producerName, String consumerName)
+            throws PipeNotFoundException, PipeTypeException {
+
+        Producer producer = getPipe(producerName);
+        if (producer == null)
+            throw new PipeNotFoundException("Producer pipe not found");
+
+        Consumer consumer = getPipe(consumerName);
+        if (consumer == null)
+            throw new PipeNotFoundException("Consumer pipe not found");
+
+        Class<?> producerType = producer.getOutputType();
+        Class<?> consumerType = consumer.getInputType();
+
+        if (!consumerType.isAssignableFrom(producerType)) {
+            String pname = producerType.getSimpleName();
+            String cname = consumerType.getSimpleName();
+            String msg = "Type " + pname + " is not assignable to " + cname;
+            throw new PipeTypeException(msg);
+        }
+
+        producer.addConsumer(consumer);
     }
 
     /**

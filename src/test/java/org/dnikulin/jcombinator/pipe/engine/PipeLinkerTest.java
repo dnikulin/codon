@@ -33,10 +33,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 
+import org.dnikulin.jcombinator.pipe.core.Consumer;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
+import org.dnikulin.jcombinator.pipe.core.Producer;
 import org.dnikulin.jcombinator.pipe.except.PipeException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;
+import org.dnikulin.jcombinator.pipe.except.PipeNotFoundException;
+import org.dnikulin.jcombinator.pipe.except.PipeTypeException;
 import org.dnikulin.jcombinator.pipe.simple.TestPipe;
 import org.junit.Test;
 
@@ -102,7 +106,7 @@ public class PipeLinkerTest {
             // Must not reach this assertion
             assertTrue(false);
         } catch (PipeNameInvalidException ex) {
-            assertTrue(true);
+            // Correct
         } catch (PipeNameInUseException ex) {
             assertTrue(false);
         }
@@ -116,7 +120,7 @@ public class PipeLinkerTest {
         } catch (PipeNameInvalidException ex) {
             assertTrue(false);
         } catch (PipeNameInUseException ex) {
-            assertTrue(true);
+            // Correct
         }
 
         // Must record only the names that were added successfully
@@ -137,5 +141,97 @@ public class PipeLinkerTest {
         linker.removePipe(name1);
         assertSame(null, linker.getPipe(name1));
         assertEquals(2, linker.getPipeNames().size());
+    }
+
+    @Test
+    public void testLinkPipes() {
+        TestPipe pipe1 = new TestPipe(Object.class, Pipe.class);
+        TestPipe pipe2A = new TestPipe(Pipe.class, Pipe.class);
+        TestPipe pipe2B = new TestPipe(Consumer.class, Producer.class);
+        TestPipe pipe3 = new TestPipe(Pipe.class, Object.class);
+
+        PipeLinker linker = new PipeLinker();
+
+        try {
+            // Must add pipes without exceptions
+            linker.addPipe("pipe1", pipe1);
+            linker.addPipe("pipe2A", pipe2A);
+            linker.addPipe("pipe2B", pipe2B);
+            linker.addPipe("pipe3", pipe3);
+        } catch (PipeNameInUseException ex) {
+            assertTrue(false);
+        } catch (PipeNameInvalidException ex) {
+            assertTrue(false);
+        }
+
+        // Must have added exactly those 4 pipes
+        assertEquals(4, linker.getPipeNames().size());
+
+        try {
+            // Must link correctly typed pipes without exceptions
+            linker.linkPipes("pipe1", "pipe2A");
+            linker.linkPipes("pipe1", "pipe2B");
+            linker.linkPipes("pipe2A", "pipe3");
+
+            assertTrue(pipe1.hasConsumer());
+            assertTrue(pipe2A.hasConsumer());
+            assertFalse(pipe2B.hasConsumer());
+            assertFalse(pipe3.hasConsumer());
+        } catch (PipeNotFoundException ex) {
+            assertTrue(false);
+        } catch (PipeTypeException ex) {
+            assertTrue(false);
+        }
+
+        try {
+            // Must not link incorrectly typed pipes
+            linker.linkPipes("pipe2B", "pipe3");
+
+            // Must not reach this assertion
+            assertTrue(false);
+        } catch (PipeNotFoundException ex) {
+            assertTrue(false);
+        } catch (PipeTypeException ex) {
+            // Correct
+        }
+
+        try {
+            // Must not link missing pipes
+            linker.linkPipes("pipe2B", "none");
+
+            // Must not reach this assertion
+            assertTrue(false);
+        } catch (PipeNotFoundException ex) {
+            // Correct
+        } catch (PipeTypeException ex) {
+            assertTrue(false);
+        }
+
+        // Must not pass values by default
+        pipe1.consume(pipe1);
+        assertEquals(1, pipe1.count());
+        assertEquals(0, pipe2A.count());
+        assertEquals(0, pipe2B.count());
+        assertEquals(0, pipe3.count());
+
+        // Must pass values when configured to
+        pipe1.setPass(true);
+        pipe1.consume(pipe1);
+        assertEquals(2, pipe1.count());
+        assertEquals(1, pipe2A.count());
+        assertEquals(1, pipe2B.count());
+        assertEquals(0, pipe3.count());
+        assertSame(pipe1, pipe2A.last());
+        assertSame(pipe1, pipe2B.last());
+
+        // Must pass values when configured to
+        pipe2A.setPass(true);
+        pipe2B.setPass(true);
+        pipe1.consume(pipe1);
+        assertEquals(3, pipe1.count());
+        assertEquals(2, pipe2A.count());
+        assertEquals(2, pipe2B.count());
+        assertEquals(1, pipe3.count()); // From 2A but not 2B
+        assertSame(pipe1, pipe3.last());
     }
 }
