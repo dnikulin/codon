@@ -56,18 +56,11 @@ public class PluginLinkerTest {
         assertSame(PrintLogger.SYSOUT, linker.getLineLogger());
     }
 
-    /** Constructor with null logger must throw a NullPointerException. */
+    /** Constructor with null logger must use NullLogger. */
     @Test
     public void testConstructorNull() {
-        boolean threw = false;
-
-        try {
-            new PluginLinker(null);
-        } catch (NullPointerException ex) {
-            threw = true;
-        }
-
-        assertTrue(threw);
+        PluginLinker linker = new PluginLinker(null);
+        assertSame(NullLogger.INSTANCE, linker.getLineLogger());
     }
 
     /** Linker must include a plugin slot list. */

@@ -51,13 +51,10 @@ public class PluginLinker {
      * Construct a PluginLinker with the given line logger.
      * 
      * @param logger
-     *            Line logger
+     *            Line logger (may be null)
      */
     public PluginLinker(LineLogger logger) {
-        if (logger == null)
-            throw new NullPointerException("logger is null");
-
-        this.logger = logger;
+        this.logger = NullLogger.or(logger);
 
         slots = new ArrayList<PluginSlot>();
         nodes = new ArrayList<PluginNode>();
