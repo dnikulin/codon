@@ -25,9 +25,19 @@
 package org.dnikulin.jcombinator.pipe.engine;
 
 import static org.dnikulin.jcombinator.pipe.engine.PipeLinker.isPipeNameValid;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Set;
+
+import org.dnikulin.jcombinator.pipe.core.Pipe;
+import org.dnikulin.jcombinator.pipe.except.PipeException;
+import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
+import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;
+import org.dnikulin.jcombinator.pipe.simple.TestPipe;
 import org.junit.Test;
 
 public class PipeLinkerTest {
@@ -57,5 +67,75 @@ public class PipeLinkerTest {
         assertFalse(isPipeNameValid("#"));
         assertFalse(isPipeNameValid("a#"));
         assertFalse(isPipeNameValid("a_%"));
+    }
+
+    @Test
+    public void testAddPipe() {
+        final String name1 = "test1";
+        final String name2 = "test2";
+        final String name3 = "test3";
+        final String badname = "3";
+
+        PipeLinker linker = new PipeLinker();
+        Pipe pipe1 = new TestPipe();
+        Pipe pipe2 = new TestPipe();
+
+        // Must start with no pipes registered
+        assertTrue(linker.getPipeNames().isEmpty());
+
+        try {
+            // Must add pipes with a valid name
+            linker.addPipe(name1, pipe1);
+            linker.addPipe(name2, pipe2);
+
+            // Must be able to add same pipe under different names
+            linker.addPipe(name3, pipe1);
+        } catch (PipeException ex) {
+            // Failed
+            assertTrue(false);
+        }
+
+        try {
+            // Must fail to add pipes with invalid name
+            linker.addPipe(badname, pipe1);
+
+            // Must not reach this assertion
+            assertTrue(false);
+        } catch (PipeNameInvalidException ex) {
+            assertTrue(true);
+        } catch (PipeNameInUseException ex) {
+            assertTrue(false);
+        }
+
+        try {
+            // Must fail to add pipes with existing name
+            linker.addPipe(name1, pipe1);
+
+            // Must not reach this assertion
+            assertTrue(false);
+        } catch (PipeNameInvalidException ex) {
+            assertTrue(false);
+        } catch (PipeNameInUseException ex) {
+            assertTrue(true);
+        }
+
+        // Must record only the names that were added successfully
+        Set<String> pipeNames = linker.getPipeNames();
+        assertEquals(3, pipeNames.size());
+        assertTrue(pipeNames.contains(name1));
+        assertTrue(pipeNames.contains(name2));
+        assertTrue(pipeNames.contains(name3));
+        assertFalse(pipeNames.contains(badname));
+
+        // Must associate pipe instances correctly
+        assertNotSame(pipe1, pipe2);
+        assertSame(pipe1, linker.getPipe(name1));
+        assertSame(pipe1, linker.getPipe(name3));
+        assertSame(pipe2, linker.getPipe(name2));
+
+        // Must remove pipes correctly
+        linker.removePipe(name1);
+        assertSame(null, linker.getPipe(name1));
+        assertEquals(2, linker.getPipeNames().size());
     }
 }

@@ -24,7 +24,15 @@
 
 package org.dnikulin.jcombinator.pipe.engine;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
+
+import org.dnikulin.jcombinator.pipe.core.Pipe;
+import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
+import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;
 
 /** A named pipe registry. Allows pipe lookup and connection by name. */
 public class PipeLinker {
@@ -33,6 +41,64 @@ public class PipeLinker {
 
     /** Valid pipe name regular expression as Pattern. */
     public static final Pattern PIPE_NAME_RE = Pattern.compile(PIPE_NAME_EX);
+
+    private final Map<String, Pipe> pipes;
+
+    /** Construct a pipe linker with an empty pipe registry. */
+    public PipeLinker() {
+        pipes = new TreeMap<String, Pipe>();
+    }
+
+    /**
+     * Add a pipe by the given name.
+     * 
+     * @param name
+     *            Name to register pipe under
+     * @param pipe
+     *            Pipe to register
+     */
+    public void addPipe(String name, Pipe pipe)
+            throws PipeNameInvalidException, PipeNameInUseException {
+
+        if (!isPipeNameValid(name))
+            throw new PipeNameInvalidException("Pipe name is invalid");
+
+        if (pipes.containsKey(name))
+            throw new PipeNameInUseException("Pipe name is already in use");
+
+        pipes.put(name, pipe);
+    }
+
+    /**
+     * Remove a pipe with the given name. Does nothing for non-existent name.
+     * 
+     * @param name
+     *            Pipe to remove
+     */
+    public void removePipe(String name) {
+        pipes.remove(name);
+    }
+
+    /**
+     * Query pipe name set. Returns a copy that has no effect on the internal
+     * set.
+     * 
+     * @return Set of pipe names as a copy
+     */
+    public Set<String> getPipeNames() {
+        return new TreeSet<String>(pipes.keySet());
+    }
+
+    /**
+     * Find a pipe by its name.
+     * 
+     * @param name
+     *            Pipe name
+     * @return Pipe if found, null if not found
+     */
+    public Pipe getPipe(String name) {
+        return pipes.get(name);
+    }
 
     /**
      * Checks if a pipe name is valid. Valid pipe names start with a letter and
