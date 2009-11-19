@@ -26,8 +26,10 @@ package org.dnikulin.jcombinator.log;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.dnikulin.jcombinator.misc.Resettable;
+
 /** A LineLogger that only counts its invocations. */
-public class CountingLogger implements LineLogger {
+public class CountingLogger implements LineLogger, Resettable {
     private final AtomicLong prints;
 
     /** Construct a LineLogger with a zero count. */
@@ -46,6 +48,7 @@ public class CountingLogger implements LineLogger {
     }
 
     /** Reset count to 0. */
+    @Override
     public void reset() {
         setCount(0);
     }
