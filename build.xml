@@ -53,6 +53,8 @@
     </target>
 
     <target depends="build-project" name="test">
+        <mkdir dir="reports" />
+
         <junit printsummary="yes" haltonfailure="yes">
             <classpath refid="classpath-test" />
             <formatter type="plain" />
