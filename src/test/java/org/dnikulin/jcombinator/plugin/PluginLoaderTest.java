@@ -162,7 +162,7 @@ public class PluginLoaderTest {
 
         // Must be able to import a single file silently
         loader.importFile(file, head);
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must store file contents
         byte[] data = loader.getBytes(path);
@@ -172,7 +172,7 @@ public class PluginLoaderTest {
         // Must use stored bytes for loadClass, and work silently
         String className = "test.TestPluginNode";
         Class<?> testClass = loader.loadClass(className);
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
         assertEquals(className, testClass.getName());
 
         // Must have only loaded this class and its dependencies
@@ -190,7 +190,7 @@ public class PluginLoaderTest {
         }
 
         assertFalse(threw);
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must have not loaded any additional classes
         assertEquals(3, loader.getLoadedClasses().size());
@@ -221,12 +221,12 @@ public class PluginLoaderTest {
         // Must not yet have either TestPlugin* class
         assertFalse(tryLoadClass(loader, nodeClassName));
         assertFalse(tryLoadClass(loader, slotClassName));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
         log.reset();
 
         // Run import code, must be silent
         code.run(loader);
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must store file contents (TestPluginNode)
         byte[] nodeBytes = loader.getBytes(nodePath);
@@ -241,13 +241,13 @@ public class PluginLoaderTest {
 
         // Must use stored bytes for loadClass (TestPluginNode)
         Class<?> nodeClass = loader.loadClass(nodeClassName);
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
         assertEquals(nodeClassName, nodeClass.getName());
 
         // Must use stored bytes for loadClass (TestPluginSlot)
         Class<?> slotClass = loader.loadClass(slotClassName);
         assertNotSame(nodeClass, slotClass);
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
         assertEquals(slotClassName, slotClass.getName());
 
         // Must have only loaded those classes and their dependencies
@@ -333,7 +333,7 @@ public class PluginLoaderTest {
 
         // Must not yet have either TestPlugin* class
         assertFalse(tryLoadClass(loader, nodeClassName));
-        assertEquals(1, log.getCount());
+        assertEquals(1, log.count());
 
         // Run jar import code, must be silent
         File root = new File("bin/jcombinator-testplugin.jar");
@@ -341,7 +341,7 @@ public class PluginLoaderTest {
         assertTrue(root.isFile());
         assertTrue(root.canRead());
         loader.importJar(root);
-        assertEquals(1, log.getCount());
+        assertEquals(1, log.count());
 
         // Must store file contents
         byte[] nodeBytes = loader.getBytes(nodePath);
@@ -359,7 +359,7 @@ public class PluginLoaderTest {
         }
 
         assertTrue(threw);
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
         assertEquals(0, loader.getLoadedClasses().size());
     }
 
@@ -382,7 +382,7 @@ public class PluginLoaderTest {
         assertTrue(root.isFile());
         assertTrue(root.canRead());
         loader.importJar(root);
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must not load any classes if given "NoSuffix"
         loader.loadClasses("NoSuffix");
@@ -403,7 +403,7 @@ public class PluginLoaderTest {
         assertEquals(5, loader.getLoadedClasses().size());
 
         // Must have logged nothing so far
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must have loaded correct classes from parent
         List<Class<?>> loaded = loader.getLoadedClasses();
@@ -449,15 +449,15 @@ public class PluginLoaderTest {
         assertTrue(root.isFile());
         assertTrue(root.canRead());
         loader.importJar(root);
-        assertEquals(0, loadlog.getCount());
+        assertEquals(0, loadlog.count());
 
         // Give linker node classes from loader
         loader.givePluginLinkerNodes(linker);
 
         // Loader must have logged nothing
         // Linker must have logged that one node class was added
-        assertEquals(0, loadlog.getCount());
-        assertEquals(1, linklog.getCount());
+        assertEquals(0, loadlog.count());
+        assertEquals(1, linklog.count());
 
         // Linker must now have the node class
         Class<?> nodeClass = loader.loadClass("test.TestPluginNode");
@@ -506,12 +506,12 @@ public class PluginLoaderTest {
         // Must be able to load from parent without exceptions or logging
         Class<?> stringClass = loader.loadClass("java.lang.String");
         assertSame(String.class, stringClass);
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
         assertEquals(1, loader.getLoadedClasses().size());
 
         // Must log and throw for unavailable class
         assertFalse(tryLoadClass(loader, "org.NoSuchClass"));
-        assertEquals(1, log.getCount());
+        assertEquals(1, log.count());
         assertEquals(1, loader.getLoadedClasses().size());
     }
 

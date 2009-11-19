@@ -94,22 +94,22 @@ public class TestPipeTest {
         TestPipe pipe1 = new TestPipe(Object.class, Pipe.class);
         CountingLogger log1 = new CountingLogger();
         pipe1.setLineLogger(log1);
-        assertEquals(0, log1.getCount());
+        assertEquals(0, log1.count());
 
         TestPipe pipe2A = new TestPipe(Pipe.class, Pipe.class);
         CountingLogger log2A = new CountingLogger();
         pipe2A.setLineLogger(log2A);
-        assertEquals(0, log2A.getCount());
+        assertEquals(0, log2A.count());
 
         TestPipe pipe2B = new TestPipe(Consumer.class, Producer.class);
         CountingLogger log2B = new CountingLogger();
         pipe2B.setLineLogger(log2B);
-        assertEquals(0, log2B.getCount());
+        assertEquals(0, log2B.count());
 
         TestPipe pipe3 = new TestPipe(Pipe.class, Object.class);
         CountingLogger log3 = new CountingLogger();
         pipe3.setLineLogger(log3);
-        assertEquals(0, log3.getCount());
+        assertEquals(0, log3.count());
 
         // Must connect for identical type (Pipe)
         assertTrue(pipe1.addConsumer(pipe2A));
@@ -130,10 +130,10 @@ public class TestPipeTest {
         assertFalse(pipe1.addConsumer(pipe2B));
 
         // Must not log anything yet
-        assertEquals(0, log1.getCount());
-        assertEquals(0, log2A.getCount());
-        assertEquals(0, log2B.getCount());
-        assertEquals(0, log3.getCount());
+        assertEquals(0, log1.count());
+        assertEquals(0, log2A.count());
+        assertEquals(0, log2B.count());
+        assertEquals(0, log3.count());
 
         // Must not pass values by default
         pipe1.consume(pipe1);
@@ -180,9 +180,9 @@ public class TestPipeTest {
 
         // Must log for each pass only
         // +1 for these pipes because they started without passing
-        assertEquals(pipe1.count(), log1.getCount() + 1);
-        assertEquals(pipe2A.count(), log2A.getCount() + 1);
-        assertEquals(pipe2B.count(), log2B.getCount() + 1);
-        assertEquals(0, log3.getCount());
+        assertEquals(pipe1.count(), log1.count() + 1);
+        assertEquals(pipe2A.count(), log2A.count() + 1);
+        assertEquals(pipe2B.count(), log2B.count() + 1);
+        assertEquals(0, log3.count());
     }
 }

@@ -32,33 +32,33 @@ import org.dnikulin.jcombinator.misc.Resettable;
 public class CountingLogger implements LineLogger, Resettable {
     private final AtomicLong prints;
 
-    /** Construct a LineLogger with a zero count. */
+    /** Construct a LineLogger with a zero print count. */
     public CountingLogger() {
         prints = new AtomicLong(0);
     }
 
     /**
-     * Reset count.
+     * Reset print count.
      * 
      * @param count
-     *            New count
+     *            New print count
      */
     public void setCount(long count) {
         prints.set(count);
     }
 
-    /** Reset count to 0. */
+    /** Reset print count to 0. */
     @Override
     public void reset() {
         setCount(0);
     }
 
     /**
-     * Query count.
+     * Query print count.
      * 
-     * @return Current count
+     * @return Current print count
      */
-    public long getCount() {
+    public long count() {
         return prints.get();
     }
 

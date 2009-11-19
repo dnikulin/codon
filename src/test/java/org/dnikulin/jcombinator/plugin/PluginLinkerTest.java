@@ -80,20 +80,20 @@ public class PluginLinkerTest {
         PluginSlot slot2 = new NullPluginSlot();
 
         // Must not log anything yet
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must return true when adding a new slot, and log exactly once
         assertTrue(linker.addPluginSlot(slot1));
-        assertEquals(1, log.getCount());
+        assertEquals(1, log.count());
 
         assertTrue(linker.addPluginSlot(slot2));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
 
         // Must return false when re-adding an old slot, and not log
         assertFalse(linker.addPluginSlot(slot1));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
         assertFalse(linker.addPluginSlot(slot2));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
 
         // Must be able to return slot list
         List<PluginSlot> slots = linker.getPluginSlots();
@@ -122,7 +122,7 @@ public class PluginLinkerTest {
         PluginNode node2 = new NullPluginNode2();
 
         // Must not log anything yet
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must recall which node classes are registered (nothing yet)
         assertFalse(linker.hasPluginNodeForClass(NullPluginNode.class));
@@ -130,16 +130,16 @@ public class PluginLinkerTest {
 
         // Must return true when adding a new node, and log exactly once
         assertTrue(linker.addPluginNode(node1));
-        assertEquals(1, log.getCount());
+        assertEquals(1, log.count());
 
         assertTrue(linker.addPluginNode(node2));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
 
         // Must return false when re-adding an old node, and not log
         assertFalse(linker.addPluginNode(node1));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
         assertFalse(linker.addPluginNode(node2));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
 
         // Must be able to return node list
         List<PluginNode> nodes = linker.getPluginNodes();
@@ -202,17 +202,17 @@ public class PluginLinkerTest {
         PluginSlot slot2 = new NullPluginSlot2();
 
         // Must not log anything yet
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must install returning true if no exception is thrown
         // Must log exactly once
         assertTrue(linker.installPlugin(slot1, node1));
-        assertEquals(1, log.getCount());
+        assertEquals(1, log.count());
 
         // Must install returning false if an exception is thrown
         // Must log exactly once
         assertFalse(linker.installPlugin(slot2, node1));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
     }
 
     /** Linker must be able to auto-install when adding nodes. */
@@ -227,27 +227,27 @@ public class PluginLinkerTest {
         PluginNode node2 = new NullPluginNode2();
 
         // Must not log anything yet
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must return true when adding new slots
         // Must log exactly once per addition
         assertTrue(linker.addPluginSlot(slot1));
-        assertEquals(1, log.getCount());
+        assertEquals(1, log.count());
         assertTrue(linker.addPluginSlot(slot2));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
 
         // Must return true and install into working slot, logging for both
         assertTrue(linker.addPluginNode(node1));
-        assertEquals(4, log.getCount());
+        assertEquals(4, log.count());
 
         // Must return false and not log for re-add
         assertFalse(linker.addPluginNode(node1));
-        assertEquals(4, log.getCount());
+        assertEquals(4, log.count());
 
         // Must return true, install into working slot,
         // and fail for non-working slot, logging for all
         assertTrue(linker.addPluginNode(node2));
-        assertEquals(7, log.getCount());
+        assertEquals(7, log.count());
     }
 
     /** Linker must be able to auto-install when adding slots. */
@@ -262,27 +262,27 @@ public class PluginLinkerTest {
         PluginNode node2 = new NullPluginNode2();
 
         // Must not log anything yet
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must return true when adding new nodes
         // Must log exactly once per addition
         assertTrue(linker.addPluginNode(node1));
-        assertEquals(1, log.getCount());
+        assertEquals(1, log.count());
         assertTrue(linker.addPluginNode(node2));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
 
         // Must return true and install both plugins, logging for all
         assertTrue(linker.addPluginSlot(slot1));
-        assertEquals(5, log.getCount());
+        assertEquals(5, log.count());
 
         // Must return false and not log for re-add
         assertFalse(linker.addPluginSlot(slot1));
-        assertEquals(5, log.getCount());
+        assertEquals(5, log.count());
 
         // Must return true and fail to install for one node,
         // logging for both
         assertTrue(linker.addPluginSlot(slot2));
-        assertEquals(7, log.getCount());
+        assertEquals(7, log.count());
     }
 
     /** Linker must be able to automatically make nodes from classes. */
@@ -299,12 +299,12 @@ public class PluginLinkerTest {
         PluginNode node = NullPluginNode.INSTANCE;
 
         // Must not log anything yet
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must return true when adding new nodes
         // Must log exactly once per addition
         assertTrue(linker.addPluginNode(node));
-        assertEquals(1, log.getCount());
+        assertEquals(1, log.count());
 
         // Must have only the class added
         assertTrue(linker.hasPluginNodeForClass(NullPluginNode.class));
@@ -315,13 +315,13 @@ public class PluginLinkerTest {
         assertTrue(linker.hasPluginNodeForClass(NullPluginNode.class));
         assertTrue(linker.hasPluginNodeForClass(NullPluginNode2.class));
         assertFalse(linker.hasPluginNodeForClass(String.class));
-        assertEquals(2, log.getCount());
+        assertEquals(2, log.count());
 
         // Must log when instantiation fails
         classes.add(NullPluginNode4.class);
         linker.makePluginNodes(classes);
         assertFalse(linker.hasPluginNodeForClass(NullPluginNode4.class));
-        assertEquals(3, log.getCount());
+        assertEquals(3, log.count());
     }
 
     public static class NullPluginNode2 extends NullPluginNode {

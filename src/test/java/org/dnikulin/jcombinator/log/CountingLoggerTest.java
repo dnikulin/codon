@@ -34,26 +34,26 @@ public class CountingLoggerTest {
         CountingLogger log = new CountingLogger();
 
         // Must start with count at 0
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
 
         // Must be able to set count
         log.setCount(7);
-        assertEquals(7, log.getCount());
+        assertEquals(7, log.count());
 
         // Must increment count on print
         log.print("Test 1");
-        assertEquals(8, log.getCount());
+        assertEquals(8, log.count());
 
         // Must support negative count
         log.setCount(-7);
-        assertEquals(-7, log.getCount());
+        assertEquals(-7, log.count());
 
         // Must increment count even when negative
         log.print("Test 2");
-        assertEquals(-6, log.getCount());
+        assertEquals(-6, log.count());
 
         // Must be able to reset count to 0
         log.reset();
-        assertEquals(0, log.getCount());
+        assertEquals(0, log.count());
     }
 }
