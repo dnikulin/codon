@@ -55,6 +55,18 @@ public class PipeBuildParserTest {
         assertParse(" foo\\  ba\\r \\\\ ", "foo ", "bar", "\\");
     }
 
+    @Test
+    public void testQuotedTokens() {
+        assertParse("\"foo\"", "foo");
+        assertParse(" \"foo bar\"  ", "foo bar");
+        assertParse("\"foo \\\" bar\"", "foo \" bar");
+        assertParse("\"foo \\\\ bar\"", "foo \\ bar");
+
+        // Test unterminated quotation as well
+        assertParse("\"foo \\\\ bar  ", "foo \\ bar  ");
+        assertParse("\"foo \\\\ bar  \\", "foo \\ bar  ");
+    }
+
     /**
      * Assert that a parse results in the tokens expected.
      * 
