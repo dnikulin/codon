@@ -33,4 +33,15 @@ public class NullLogger implements LineLogger {
     public void print(String line) {
         // Ignore
     }
+
+    /**
+     * Return logger if logger is not null, otherwise return INSTANCE.
+     * 
+     * @param logger
+     *            Line logger candidate
+     * @return Non-null line logger
+     */
+    public static LineLogger or(LineLogger logger) {
+        return (logger == null) ? INSTANCE : logger;
+    }
 }
