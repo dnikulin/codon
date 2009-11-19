@@ -24,7 +24,23 @@
 
 package org.dnikulin.jcombinator.pipe.engine;
 
+import java.util.regex.Pattern;
+
 /** A named pipe registry. Allows pipe lookup and connection by name. */
 public class PipeLinker {
+    /** Valid pipe name regular expression. */
+    public static final String PIPE_NAME_EX = "[a-zA-Z][a-zA-Z0-9_]*";
 
+    /** Valid pipe name regular expression as Pattern. */
+    public static final Pattern PIPE_NAME_RE = Pattern.compile(PIPE_NAME_EX);
+
+    /**
+     * Checks if a pipe name is valid. Valid pipe names start with a letter and
+     * may follow with letters, numbers or underscores.
+     * 
+     * @return true iff the pipe name is valid
+     */
+    public static boolean isPipeNameValid(String name) {
+        return PIPE_NAME_RE.matcher(name).matches();
+    }
 }

@@ -24,10 +24,38 @@
 
 package org.dnikulin.jcombinator.pipe.engine;
 
+import static org.dnikulin.jcombinator.pipe.engine.PipeLinker.isPipeNameValid;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 public class PipeLinkerTest {
     @Test
-    public void testNothing() {
+    public void testIsPipeNameValid() {
+        // Must not accept empty string
+        assertFalse(isPipeNameValid(""));
+
+        // Must accept single letter
+        assertTrue(isPipeNameValid("a"));
+        assertTrue(isPipeNameValid("Z"));
+
+        // Must not accept single number or underscore
+        assertFalse(isPipeNameValid("2"));
+        assertFalse(isPipeNameValid("_"));
+
+        // Must accept letter followed by letters, numbers or underscores
+        assertTrue(isPipeNameValid("az"));
+        assertTrue(isPipeNameValid("a2"));
+        assertTrue(isPipeNameValid("a_"));
+        assertTrue(isPipeNameValid("aZ2"));
+        assertTrue(isPipeNameValid("a2Z"));
+        assertTrue(isPipeNameValid("a2Z_"));
+
+        // Must not accept any character that is not
+        // a letter, number or underscore
+        assertFalse(isPipeNameValid("#"));
+        assertFalse(isPipeNameValid("a#"));
+        assertFalse(isPipeNameValid("a_%"));
     }
 }
