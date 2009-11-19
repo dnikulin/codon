@@ -31,11 +31,12 @@ import org.dnikulin.jcombinator.misc.ParserToken;
 
 /** Parses a string definition of a pipeline. */
 public class PipeBuildParser {
+    public static final char BACKSLASH = '\\';
     public static final char SPACE = ' ';
     public static final char TAB = '\t';
 
     private enum State {
-        WHITE, TOKEN
+        WHITE, TOKEN, ESCAPED
     }
 
     private final ParserToken token;
@@ -66,12 +67,21 @@ public class PipeBuildParser {
     /** Parse a single character. */
     public void feed(char ch) {
         switch (state) {
+        case ESCAPED:
+            token.append(ch);
+            state = State.TOKEN;
+            break;
+
         case TOKEN:
             switch (ch) {
             case SPACE:
             case TAB:
                 storeToken();
                 state = State.WHITE;
+                break;
+
+            case BACKSLASH:
+                state = State.ESCAPED;
                 break;
 
             default:
@@ -83,6 +93,10 @@ public class PipeBuildParser {
             switch (ch) {
             case SPACE:
             case TAB:
+                break;
+
+            case BACKSLASH:
+                state = State.ESCAPED;
                 break;
 
             default:

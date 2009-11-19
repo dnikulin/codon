@@ -24,11 +24,58 @@
 
 package org.dnikulin.jcombinator.pipe.engine;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 public class PipeBuildParserTest {
+    @Test
+    public void testBlankString() {
+        assertParse("");
+        assertParse(" \t  ");
+    }
+
+    @Test
+    public void testSimpleTokens() {
+        assertParse("foo", "foo");
+    }
+
+    @Test
+    public void testPaddedTokens() {
+        assertParse(" foo  \t", "foo");
+        assertParse(" foo  bar  \t", "foo", "bar");
+    }
+
+    @Test
+    public void testEscapedTokens() {
+        assertParse("\\");
+        assertParse("\\ ", " ");
+        assertParse("\\\\", "\\");
+        assertParse(" foo\\  ba\\r \\\\ ", "foo ", "bar", "\\");
+    }
+
+    /**
+     * Assert that a parse results in the tokens expected.
+     * 
+     * @param line
+     *            Line to parse
+     * @param expect
+     *            Tokens expected
+     */
+    public static void assertParse(String line, String... expect) {
+        String[] result = parse(line);
+        assertEquals(expect.length, result.length);
+        assertArrayEquals(expect, result);
+    }
+
+    /**
+     * Return the tokens parsed from a string.
+     * 
+     * @param line
+     *            String to parse
+     * @return Tokens parsed
+     */
     public static String[] parse(String line) {
         PipeBuildParser parser = new PipeBuildParser();
 
@@ -37,37 +84,5 @@ public class PipeBuildParserTest {
 
         parser.feed(line);
         return parser.getTokens();
-    }
-
-    @Test
-    public void testBlankString() {
-        // Must return empty array for empty string
-        String[] blank = parse("");
-        assertEquals(0, blank.length);
-
-        // Must return empty array for whitespace string
-        String[] white = parse(" \t  ");
-        assertEquals(0, white.length);
-    }
-
-    @Test
-    public void testSingleToken() {
-        String tok = "foo";
-
-        // Must return exact string for single token
-        String[] exact = parse(tok);
-        assertEquals(1, exact.length);
-        assertEquals(tok, exact[0]);
-    }
-
-    @Test
-    public void testPaddedToken() {
-        String tok = "foo";
-        String pad = " " + tok + "\t ";
-
-        // Must return exact string for padded token
-        String[] exact = parse(pad);
-        assertEquals(1, exact.length);
-        assertEquals(tok, exact[0]);
     }
 }
