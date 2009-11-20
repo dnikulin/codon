@@ -94,14 +94,17 @@ public class PipeLinker {
     }
 
     /**
-     * Find a pipe by its name.
+     * Find a pipe by its name. Throws an exception if the pipe is not found.
      * 
      * @param name
      *            Pipe name
-     * @return Pipe if found, null if not found
+     * @return Pipe by this name
      */
-    public Pipe getPipe(String name) {
-        return pipes.get(name);
+    public Pipe getPipe(String name) throws PipeNotFoundException {
+        Pipe pipe = pipes.get(name);
+        if (pipe == null)
+            throw new PipeNotFoundException("Pipe '" + name + "' not found");
+        return pipe;
     }
 
     /**
@@ -116,12 +119,7 @@ public class PipeLinker {
             throws PipeNotFoundException, PipeTypeException {
 
         Producer producer = getPipe(producerName);
-        if (producer == null)
-            throw new PipeNotFoundException("Producer pipe not found");
-
         Consumer consumer = getPipe(consumerName);
-        if (consumer == null)
-            throw new PipeNotFoundException("Consumer pipe not found");
 
         Class<?> producerType = producer.getOutputType();
         Class<?> consumerType = consumer.getInputType();

@@ -131,16 +131,29 @@ public class PipeLinkerTest {
         assertTrue(pipeNames.contains(name3));
         assertFalse(pipeNames.contains(badname));
 
-        // Must associate pipe instances correctly
-        assertNotSame(pipe1, pipe2);
-        assertSame(pipe1, linker.getPipe(name1));
-        assertSame(pipe1, linker.getPipe(name3));
-        assertSame(pipe2, linker.getPipe(name2));
+        try {
+            // Must associate pipe instances correctly
+            assertNotSame(pipe1, pipe2);
+            assertSame(pipe1, linker.getPipe(name1));
+            assertSame(pipe1, linker.getPipe(name3));
+            assertSame(pipe2, linker.getPipe(name2));
+        } catch (PipeNotFoundException ex) {
+            assertTrue(false);
+        }
 
-        // Must remove pipes correctly
-        linker.removePipe(name1);
-        assertSame(null, linker.getPipe(name1));
-        assertEquals(2, linker.getPipeNames().size());
+        try {
+            // Must remove pipes correctly
+            linker.removePipe(name1);
+            assertEquals(2, linker.getPipeNames().size());
+
+            // Must throw an exception here
+            linker.getPipe(name1);
+
+            // Must not reach this assertion
+            assertTrue(false);
+        } catch (PipeNotFoundException ex) {
+            // Correct
+        }
     }
 
     @Test
