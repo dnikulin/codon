@@ -22,10 +22,12 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.jcombinator.pipe.simple;
+package org.dnikulin.jcombinator.pipe.test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.dnikulin.jcombinator.pipe.simple.SimplePipe;
 
 /** A pipe for test use only. */
 public class TestPipe extends SimplePipe {

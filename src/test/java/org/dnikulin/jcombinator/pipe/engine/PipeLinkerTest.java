@@ -41,7 +41,7 @@ import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;
 import org.dnikulin.jcombinator.pipe.except.PipeNotFoundException;
 import org.dnikulin.jcombinator.pipe.except.PipeTypeException;
-import org.dnikulin.jcombinator.pipe.simple.TestPipe;
+import org.dnikulin.jcombinator.pipe.test.TestPipe;
 import org.junit.Test;
 
 public class PipeLinkerTest {

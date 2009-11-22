@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.jcombinator.pipe.simple;
+package org.dnikulin.jcombinator.pipe.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -36,6 +36,7 @@ import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.pipe.core.Consumer;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.core.Producer;
+import org.dnikulin.jcombinator.pipe.test.TestPipe;
 import org.junit.Test;
 
 public class TestPipeTest {
