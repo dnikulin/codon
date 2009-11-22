@@ -67,6 +67,18 @@ public class PipeShellParserTest {
         assertParse("\"foo \\\\ bar  \\", "foo \\ bar  ");
     }
 
+    @Test
+    public void testComment() {
+        // Comments must start with ' #' or '\t#'
+        assertParse("foo bar # ignore rest", "foo", "bar");
+        assertParse("\"foo bar\"\t# ignore rest", "foo bar");
+
+        // If following token, quote or escape, not a comment
+        assertParse("foo bar# baz", "foo", "bar#", "baz");
+        assertParse(" \"foo bar\"# baz  ", "foo bar#", "baz");
+        assertParse("foo \\# bar", "foo", "#", "bar");
+    }
+
     /**
      * Assert that a parse results in the tokens expected.
      * 

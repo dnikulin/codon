@@ -35,9 +35,10 @@ public class PipeShellParser {
     public static final char BACKSLASH = '\\';
     public static final char SPACE = ' ';
     public static final char TAB = '\t';
+    public static final char SHARP = '#';
 
     private enum State {
-        WHITE, TOKEN, ESCAPED, QUOTED, QUOTED_ESCAPED
+        WHITE, TOKEN, ESCAPED, QUOTED, QUOTED_ESCAPED, COMMENT
     }
 
     private final ParserToken token;
@@ -68,6 +69,9 @@ public class PipeShellParser {
     /** Parse a single character. */
     public void feed(char ch) {
         switch (state) {
+
+        case COMMENT:
+            break;
 
         case TOKEN:
             switch (ch) {
@@ -102,6 +106,10 @@ public class PipeShellParser {
 
             case QUOTE:
                 state = State.QUOTED;
+                break;
+
+            case SHARP:
+                state = State.COMMENT;
                 break;
 
             default:
