@@ -108,7 +108,7 @@ public class PipeLinker {
     }
 
     /**
-     * Link pipes found by name.
+     * Link pipes found by name. Throws on type error.
      * 
      * @param producerName
      *            Name of producer pipe
@@ -121,6 +121,19 @@ public class PipeLinker {
         Producer producer = getPipe(producerName);
         Consumer consumer = getPipe(consumerName);
 
+        linkPipes(producer, consumer);
+    }
+
+    /**
+     * Link pipes. Throws on type error.
+     * 
+     * @param producer
+     *            Producer pipe
+     * @param consumer
+     *            Consumer pipe
+     */
+    public static void linkPipes(Producer producer, Consumer consumer)
+            throws PipeTypeException {
         Class<?> producerType = producer.getOutputType();
         Class<?> consumerType = consumer.getInputType();
 
