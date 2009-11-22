@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class PipeBuildParserTest {
+public class PipeShellParserTest {
     @Test
     public void testBlankString() {
         assertParse("");
@@ -89,7 +89,7 @@ public class PipeBuildParserTest {
      * @return Tokens parsed
      */
     public static String[] parse(String line) {
-        PipeBuildParser parser = new PipeBuildParser();
+        PipeShellParser parser = new PipeShellParser();
 
         // Must start with no tokens
         assertEquals(0, parser.getTokens().length);

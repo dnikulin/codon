@@ -30,7 +30,7 @@ import java.util.List;
 import org.dnikulin.jcombinator.misc.ParserToken;
 
 /** Parses a string definition of a pipeline. */
-public class PipeBuildParser {
+public class PipeShellParser {
     public static final char QUOTE = '"';
     public static final char BACKSLASH = '\\';
     public static final char SPACE = ' ';
@@ -45,7 +45,7 @@ public class PipeBuildParser {
     private State state;
 
     /** Construct an initial parser. */
-    public PipeBuildParser() {
+    public PipeShellParser() {
         token = new ParserToken();
         tokens = new ArrayList<String>();
         state = State.WHITE;
