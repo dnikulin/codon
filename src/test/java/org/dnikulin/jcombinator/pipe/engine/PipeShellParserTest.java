@@ -24,9 +24,21 @@
 
 package org.dnikulin.jcombinator.pipe.engine;
 
+import static org.dnikulin.jcombinator.pipe.engine.EarlyPipeShellCompilerTest.makeTestCommands;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
+import java.util.List;
+
+import org.dnikulin.jcombinator.pipe.core.Pipe;
+import org.dnikulin.jcombinator.pipe.engine.command.PipeCommands;
+import org.dnikulin.jcombinator.pipe.except.PipeException;
+import org.dnikulin.jcombinator.pipe.except.PipeNotFoundException;
+import org.dnikulin.jcombinator.pipe.simple.CompoundPipe;
+import org.dnikulin.jcombinator.pipe.test.TestPipe;
 import org.junit.Test;
 
 public class PipeShellParserTest {
@@ -79,6 +91,85 @@ public class PipeShellParserTest {
         assertParse("foo \\# bar", "foo", "#", "bar");
     }
 
+    @Test
+    public void testCompile() {
+        try {
+            // Must not register any pipes
+            PipeLinker linker = compile("test");
+            assertTrue(linker.getPipeNames().isEmpty());
+
+            // Must name a single pipe
+            compile("~pipe1 test java.lang.String java.util.List", linker);
+            assertEquals(1, linker.getPipeNames().size());
+
+            Pipe pipe1 = linker.getPipe("pipe1");
+            assertTrue(pipe1 instanceof TestPipe);
+            assertFalse(pipe1.hasConsumer());
+            assertSame(String.class, pipe1.getInputType());
+            assertSame(List.class, pipe1.getOutputType());
+
+            // Must refer to a single pipe and name a new pipe
+            compile("~pipe1 | ~pipe2 test", linker);
+
+            // Must have linked foo to bar
+            assertTrue(pipe1.hasConsumer());
+
+            Pipe pipe2 = linker.getPipe("pipe2");
+            assertTrue(pipe2 instanceof TestPipe);
+            assertNotSame(pipe1, pipe2);
+            assertFalse(pipe2.hasConsumer());
+            assertSame(Object.class, pipe2.getInputType());
+            assertSame(Object.class, pipe2.getOutputType());
+
+            // Must connect a new anonymous pipe
+            compile("~pipe2 | test", linker);
+            assertTrue(pipe2.hasConsumer());
+
+            // Must create a named group
+            compile("~pipe3[test | test | test]", linker);
+            Pipe pipe3 = linker.getPipe("pipe3");
+            assertTrue(pipe3 instanceof CompoundPipe);
+            assertFalse(pipe3.hasConsumer());
+
+            // Must created a nested named group
+            compile("test [ ~pipe4 [ test | test", linker);
+            Pipe pipe4 = linker.getPipe("pipe4");
+            assertTrue(pipe4 instanceof CompoundPipe);
+            assertFalse(pipe4.hasConsumer());
+
+            // Must created a nested named group containing a back reference
+            compile("test [ ~pipe5 [ test | ~pipe4", linker);
+            Pipe pipe5 = linker.getPipe("pipe5");
+            assertTrue(pipe5 instanceof CompoundPipe);
+            assertFalse(pipe5.hasConsumer());
+        } catch (PipeNotFoundException ex) {
+            ex.printStackTrace();
+            fail();
+        }
+    }
+
+    public static PipeLinker compile(String line, PipeLinker linker) {
+        try {
+            PipeCommands commands = makeTestCommands();
+
+            PipeShellCompiler compiler = new EarlyPipeShellCompiler(commands,
+                    linker);
+
+            PipeShellParser parser = new PipeShellParser(compiler);
+            parser.feed(line);
+
+            return linker;
+        } catch (PipeException ex) {
+            ex.printStackTrace();
+            fail();
+            return null;
+        }
+    }
+
+    public static PipeLinker compile(String line) {
+        return compile(line, new PipeLinker());
+    }
+
     /**
      * Assert that a parse results in the tokens expected.
      * 
@@ -101,12 +192,18 @@ public class PipeShellParserTest {
      * @return Tokens parsed
      */
     public static String[] parse(String line) {
-        PipeShellParser parser = new PipeShellParser();
+        try {
+            PipeShellCompiler compiler = NullPipeShellCompiler.INSTANCE;
+            PipeShellParser parser = new PipeShellParser(compiler);
 
-        // Must start with no tokens
-        assertEquals(0, parser.getTokens().length);
+            // Must start with no tokens
+            assertEquals(0, parser.getTokens().length);
 
-        parser.feed(line);
-        return parser.getTokens();
+            parser.feed(line);
+            return parser.getTokens();
+        } catch (PipeException ex) {
+            fail();
+            return new String[] {};
+        }
     }
 }

@@ -28,6 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dnikulin.jcombinator.misc.ParserToken;
+import org.dnikulin.jcombinator.pipe.except.PipeException;
+
+// Sample pipelines:
+// cmd1 arg1 arg2 | cmd2 arg1 arg2
+// ~pipe1 cmd1 arg1 arg2 | ~pipe2 cmd2 arg1 arg2
+// cmd1 arg1 arg2 | ~pipe1
+// ~pipe1 [ cmd1 arg1 arg2 | cmd2 arg1 arg2 ]
 
 /** Parses a string definition of a pipeline. */
 public class PipeShellParser {
@@ -37,19 +44,43 @@ public class PipeShellParser {
     public static final char TAB = '\t';
     public static final char SHARP = '#';
 
+    public static final char PIPENAME = '~';
+    public static final char LINK = '|';
+    public static final char GROUP_START = '[';
+    public static final char GROUP_END = ']';
+
     private enum State {
-        WHITE, TOKEN, ESCAPED, QUOTED, QUOTED_ESCAPED, COMMENT
+        WHITE, TOKEN, ESCAPED, QUOTED, QUOTED_ESCAPED, COMMENT, NAMING
     }
+
+    private final PipeShellCompiler compiler;
 
     private final ParserToken token;
     private final List<String> tokens;
     private State state;
 
+    private String command;
+    private final List<String> arguments;
+
     /** Construct an initial parser. */
-    public PipeShellParser() {
+    public PipeShellParser(PipeShellCompiler compiler) {
+        this.compiler = compiler;
+
         token = new ParserToken();
         tokens = new ArrayList<String>();
         state = State.WHITE;
+
+        command = null;
+        arguments = new ArrayList<String>();
+    }
+
+    /**
+     * Query pipe compiler.
+     * 
+     * @return Associated pipe compiler
+     */
+    public PipeShellCompiler getCompiler() {
+        return compiler;
     }
 
     /** Reset parser state. */
@@ -60,19 +91,24 @@ public class PipeShellParser {
     }
 
     /** Parse an entire string. State is kept from previous parses. */
-    public void feed(String str) {
+    public void feed(String str) throws PipeException {
+        compiler.startCompile();
+
         for (int i = 0; i < str.length(); i++)
             feed(str.charAt(i));
         feedEnd();
+
+        compiler.stopCompile();
     }
 
     /** Parse a single character. */
-    public void feed(char ch) {
+    public void feed(char ch) throws PipeException {
         switch (state) {
 
         case COMMENT:
             break;
 
+        case NAMING:
         case TOKEN:
             switch (ch) {
             case SPACE:
@@ -87,6 +123,24 @@ public class PipeShellParser {
 
             case QUOTE:
                 state = State.QUOTED;
+                break;
+
+            case LINK:
+                endCommand();
+                compiler.takePipeLink();
+                state = State.WHITE;
+                break;
+
+            case GROUP_START:
+                endCommand();
+                compiler.takeGroupStart();
+                state = State.WHITE;
+                break;
+
+            case GROUP_END:
+                endCommand();
+                compiler.takeGroupEnd();
+                state = State.WHITE;
                 break;
 
             default:
@@ -110,6 +164,25 @@ public class PipeShellParser {
 
             case SHARP:
                 state = State.COMMENT;
+                break;
+
+            case LINK:
+                endCommand();
+                compiler.takePipeLink();
+                break;
+
+            case PIPENAME:
+                state = State.NAMING;
+                break;
+
+            case GROUP_START:
+                endCommand();
+                compiler.takeGroupStart();
+                break;
+
+            case GROUP_END:
+                endCommand();
+                compiler.takeGroupEnd();
                 break;
 
             default:
@@ -149,8 +222,8 @@ public class PipeShellParser {
     }
 
     /** Note the termination of a string. */
-    public void feedEnd() {
-        storeToken();
+    public void feedEnd() throws PipeException {
+        endCommand();
     }
 
     // Package-private
@@ -161,9 +234,43 @@ public class PipeShellParser {
         return out;
     }
 
-    private void storeToken() {
+    private void endCommand() throws PipeException {
+        try {
+            storeToken();
+
+            if (command != null) {
+                String[] ntokens = new String[arguments.size()];
+
+                for (int i = 0; i < ntokens.length; i++)
+                    ntokens[i] = arguments.get(i);
+
+                compiler.takeCommand(command, ntokens);
+            }
+        } finally {
+            command = null;
+            arguments.clear();
+        }
+    }
+
+    private void storeToken() throws PipeException {
         String ntoken = token.drain();
-        if (ntoken.length() > 0)
-            tokens.add(ntoken);
+
+        if (ntoken.isEmpty())
+            return;
+
+        tokens.add(ntoken);
+
+        switch (state) {
+        case NAMING:
+            compiler.takePipeName(ntoken);
+            break;
+
+        case TOKEN:
+            if (command == null)
+                command = ntoken;
+            else
+                arguments.add(ntoken);
+            break;
+        }
     }
 }
