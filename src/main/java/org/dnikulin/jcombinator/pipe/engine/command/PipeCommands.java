@@ -51,7 +51,7 @@ public class PipeCommands {
      * @param command
      *            Command object to register
      */
-    public void add(String commandName, PipeCommand command)
+    public synchronized void add(String commandName, PipeCommand command)
             throws PipeNameInvalidException, PipeNameInUseException {
 
         if (!PipeLinker.isPipeNameValid(commandName))
@@ -70,7 +70,8 @@ public class PipeCommands {
      *            Command name to search
      * @return Pipe command object
      */
-    public PipeCommand get(String commandName) throws PipeNotFoundException {
+    public synchronized PipeCommand get(String commandName)
+            throws PipeNotFoundException {
         PipeCommand command = commands.get(commandName);
         if (command == null)
             throw new PipeNotFoundException("Command not found");
