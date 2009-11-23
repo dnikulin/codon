@@ -46,7 +46,7 @@ public class TestPipeCommand implements PipeCommand {
             return makePipe(tokens[0], tokens[1]);
 
         default:
-            throw new PipeFactoryException("Usage: [itype otype]");
+            throw new PipeFactoryException("Usage: " + getCommandUsage());
         }
     }
 
@@ -75,5 +75,20 @@ public class TestPipeCommand implements PipeCommand {
             String msg = "Could not create TestPipe with given types";
             throw new PipeFactoryException(msg, ex);
         }
+    }
+
+    @Override
+    public String getCommandTopic() {
+        return "test";
+    }
+
+    @Override
+    public String getCommandName() {
+        return "test";
+    }
+
+    @Override
+    public String getCommandUsage() {
+        return "[itype [otype]]";
     }
 }

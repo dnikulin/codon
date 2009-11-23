@@ -30,6 +30,27 @@ import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
 /** A CLI-style command which produces a pipe. */
 public interface PipeCommand {
     /**
+     * Query command topic, e.g. networking.
+     * 
+     * @return Command topic string
+     */
+    public String getCommandTopic();
+
+    /**
+     * Query intended command name.
+     * 
+     * @return Command name string
+     */
+    public String getCommandName();
+
+    /**
+     * Query command usage specification.
+     * 
+     * @return Command usage string
+     */
+    public String getCommandUsage();
+
+    /**
      * Produce a pipe based on the given argument string tokens. Throws
      * PipeFactoryException if pipe creation failed.
      * 
