@@ -61,7 +61,7 @@ public class PipeLinker {
      * @param pipe
      *            Pipe to register
      */
-    public void addPipe(String name, Pipe pipe)
+    public synchronized void addPipe(String name, Pipe pipe)
             throws PipeNameInvalidException, PipeNameInUseException {
 
         if (!isPipeNameValid(name))
@@ -79,7 +79,7 @@ public class PipeLinker {
      * @param name
      *            Pipe to remove
      */
-    public void removePipe(String name) {
+    public synchronized void removePipe(String name) {
         pipes.remove(name);
     }
 
@@ -89,7 +89,7 @@ public class PipeLinker {
      * 
      * @return Set of pipe names as a copy
      */
-    public Set<String> getPipeNames() {
+    public synchronized Set<String> getPipeNames() {
         return new TreeSet<String>(pipes.keySet());
     }
 
@@ -100,7 +100,7 @@ public class PipeLinker {
      *            Pipe name
      * @return Pipe by this name
      */
-    public Pipe getPipe(String name) throws PipeNotFoundException {
+    public synchronized Pipe getPipe(String name) throws PipeNotFoundException {
         Pipe pipe = pipes.get(name);
         if (pipe == null)
             throw new PipeNotFoundException("Pipe '" + name + "' not found");
@@ -115,7 +115,7 @@ public class PipeLinker {
      * @param consumerName
      *            Name of consumer pipe
      */
-    public void linkPipes(String producerName, String consumerName)
+    public synchronized void linkPipes(String producerName, String consumerName)
             throws PipeNotFoundException, PipeTypeException {
 
         Producer producer = getPipe(producerName);
