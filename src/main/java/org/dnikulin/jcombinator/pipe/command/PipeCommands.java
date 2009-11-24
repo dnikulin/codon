@@ -77,6 +77,17 @@ public class PipeCommands {
     }
 
     /**
+     * Confirm the presence of a pipe command.
+     * 
+     * @param commandName
+     *            Command name to search
+     * @return true iff the command name is in use
+     */
+    public synchronized boolean has(String commandName) {
+        return commands.containsKey(commandName);
+    }
+
+    /**
      * Find a pipe command. Throws PipeNotFoundException if none found.
      * 
      * @param commandName
