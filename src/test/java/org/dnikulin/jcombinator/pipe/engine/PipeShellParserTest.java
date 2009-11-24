@@ -33,8 +33,8 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import org.dnikulin.jcombinator.pipe.command.PipeCommands;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
-import org.dnikulin.jcombinator.pipe.engine.command.PipeCommands;
 import org.dnikulin.jcombinator.pipe.except.PipeException;
 import org.dnikulin.jcombinator.pipe.except.PipeNotFoundException;
 import org.dnikulin.jcombinator.pipe.simple.CompoundPipe;

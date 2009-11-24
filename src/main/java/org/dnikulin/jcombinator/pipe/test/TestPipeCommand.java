@@ -24,8 +24,8 @@
 
 package org.dnikulin.jcombinator.pipe.test;
 
+import org.dnikulin.jcombinator.pipe.command.PipeCommand;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
-import org.dnikulin.jcombinator.pipe.engine.command.PipeCommand;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
 
 /** A pipe command that produces instances of TestPipe. */
