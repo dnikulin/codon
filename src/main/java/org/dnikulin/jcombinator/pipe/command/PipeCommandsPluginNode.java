@@ -24,6 +24,8 @@
 
 package org.dnikulin.jcombinator.pipe.command;
 
+import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
+import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;
 import org.dnikulin.jcombinator.plugin.PluginNode;
 
 /** A plugin node that add pipe commands. */
@@ -34,5 +36,6 @@ public interface PipeCommandsPluginNode extends PluginNode {
      * @param commands
      *            Command registry
      */
-    public void addPipeCommands(PipeCommands commands);
+    public void addPipeCommands(PipeCommands commands)
+            throws PipeNameInvalidException, PipeNameInUseException;
 }

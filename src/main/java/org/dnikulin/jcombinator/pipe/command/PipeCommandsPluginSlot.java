@@ -24,6 +24,7 @@
 
 package org.dnikulin.jcombinator.pipe.command;
 
+import org.dnikulin.jcombinator.pipe.except.PipeException;
 import org.dnikulin.jcombinator.plugin.PluginNode;
 import org.dnikulin.jcombinator.plugin.PluginSlot;
 
@@ -53,6 +54,10 @@ public class PipeCommandsPluginSlot implements PluginSlot {
 
     @Override
     public void installPlugin(PluginNode plugin) {
-        ((PipeCommandsPluginNode) plugin).addPipeCommands(commands);
+        try {
+            ((PipeCommandsPluginNode) plugin).addPipeCommands(commands);
+        } catch (PipeException ex) {
+            ex.printStackTrace();
+        }
     }
 }
