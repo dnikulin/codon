@@ -22,13 +22,15 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.jcombinator.pipe.engine;
+package org.dnikulin.jcombinator.pipe.compiler;
 
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.dnikulin.jcombinator.pipe.command.PipeCommands;
+import org.dnikulin.jcombinator.pipe.compiler.EarlyPipeShellCompiler;
+import org.dnikulin.jcombinator.pipe.compiler.PipeLinker;
 import org.dnikulin.jcombinator.pipe.except.PipeException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;

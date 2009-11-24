@@ -27,8 +27,8 @@ package org.dnikulin.jcombinator.pipe.command;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.dnikulin.jcombinator.pipe.compiler.PipeLinker;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
-import org.dnikulin.jcombinator.pipe.engine.PipeLinker;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;

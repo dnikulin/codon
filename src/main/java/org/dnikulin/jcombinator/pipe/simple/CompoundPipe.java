@@ -30,10 +30,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
+import org.dnikulin.jcombinator.pipe.compiler.PipeLinker;
 import org.dnikulin.jcombinator.pipe.core.Consumer;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.core.Producer;
-import org.dnikulin.jcombinator.pipe.engine.PipeLinker;
 import org.dnikulin.jcombinator.pipe.except.PipeTypeException;
 
 /** A pipe that is implemented by a list of linked pipes. */

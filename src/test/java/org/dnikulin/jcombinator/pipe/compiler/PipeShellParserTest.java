@@ -22,9 +22,9 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.jcombinator.pipe.engine;
+package org.dnikulin.jcombinator.pipe.compiler;
 
-import static org.dnikulin.jcombinator.pipe.engine.EarlyPipeShellCompilerTest.makeTestCommands;
+import static org.dnikulin.jcombinator.pipe.compiler.EarlyPipeShellCompilerTest.makeTestCommands;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -34,6 +34,11 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.dnikulin.jcombinator.pipe.command.PipeCommands;
+import org.dnikulin.jcombinator.pipe.compiler.EarlyPipeShellCompiler;
+import org.dnikulin.jcombinator.pipe.compiler.NullPipeShellCompiler;
+import org.dnikulin.jcombinator.pipe.compiler.PipeLinker;
+import org.dnikulin.jcombinator.pipe.compiler.PipeShellCompiler;
+import org.dnikulin.jcombinator.pipe.compiler.PipeShellParser;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeException;
 import org.dnikulin.jcombinator.pipe.except.PipeNotFoundException;
@@ -111,7 +116,7 @@ public class PipeShellParserTest {
             // Must refer to a single pipe and name a new pipe
             compile("~pipe1 | ~pipe2 test", linker);
 
-            // Must have linked foo to bar
+            // Must have linked pipe1 to pipe2
             assertTrue(pipe1.hasConsumer());
 
             Pipe pipe2 = linker.getPipe("pipe2");

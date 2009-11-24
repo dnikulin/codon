@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.jcombinator.pipe.engine;
+package org.dnikulin.jcombinator.pipe.compiler;
 
 import java.util.Map;
 import java.util.Set;
