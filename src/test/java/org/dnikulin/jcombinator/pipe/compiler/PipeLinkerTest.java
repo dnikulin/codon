@@ -30,10 +30,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Set;
 
-import org.dnikulin.jcombinator.pipe.compiler.PipeLinker;
 import org.dnikulin.jcombinator.pipe.core.Consumer;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.core.Producer;
@@ -97,7 +97,7 @@ public class PipeLinkerTest {
             linker.addPipe(name3, pipe1);
         } catch (PipeException ex) {
             // Failed
-            assertTrue(false);
+            fail();
         }
 
         try {
@@ -105,11 +105,11 @@ public class PipeLinkerTest {
             linker.addPipe(badname, pipe1);
 
             // Must not reach this assertion
-            assertTrue(false);
+            fail();
         } catch (PipeNameInvalidException ex) {
             // Correct
         } catch (PipeNameInUseException ex) {
-            assertTrue(false);
+            fail();
         }
 
         try {
@@ -117,9 +117,9 @@ public class PipeLinkerTest {
             linker.addPipe(name1, pipe1);
 
             // Must not reach this assertion
-            assertTrue(false);
+            fail();
         } catch (PipeNameInvalidException ex) {
-            assertTrue(false);
+            fail();
         } catch (PipeNameInUseException ex) {
             // Correct
         }
@@ -139,7 +139,7 @@ public class PipeLinkerTest {
             assertSame(pipe1, linker.getPipe(name3));
             assertSame(pipe2, linker.getPipe(name2));
         } catch (PipeNotFoundException ex) {
-            assertTrue(false);
+            fail();
         }
 
         try {
@@ -151,7 +151,7 @@ public class PipeLinkerTest {
             linker.getPipe(name1);
 
             // Must not reach this assertion
-            assertTrue(false);
+            fail();
         } catch (PipeNotFoundException ex) {
             // Correct
         }
@@ -173,9 +173,9 @@ public class PipeLinkerTest {
             linker.addPipe("pipe2B", pipe2B);
             linker.addPipe("pipe3", pipe3);
         } catch (PipeNameInUseException ex) {
-            assertTrue(false);
+            fail();
         } catch (PipeNameInvalidException ex) {
-            assertTrue(false);
+            fail();
         }
 
         // Must have added exactly those 4 pipes
@@ -192,9 +192,9 @@ public class PipeLinkerTest {
             assertFalse(pipe2B.hasConsumer());
             assertFalse(pipe3.hasConsumer());
         } catch (PipeNotFoundException ex) {
-            assertTrue(false);
+            fail();
         } catch (PipeTypeException ex) {
-            assertTrue(false);
+            fail();
         }
 
         try {
@@ -202,9 +202,9 @@ public class PipeLinkerTest {
             linker.linkPipes("pipe2B", "pipe3");
 
             // Must not reach this assertion
-            assertTrue(false);
+            fail();
         } catch (PipeNotFoundException ex) {
-            assertTrue(false);
+            fail();
         } catch (PipeTypeException ex) {
             // Correct
         }
@@ -214,11 +214,11 @@ public class PipeLinkerTest {
             linker.linkPipes("pipe2B", "none");
 
             // Must not reach this assertion
-            assertTrue(false);
+            fail();
         } catch (PipeNotFoundException ex) {
             // Correct
         } catch (PipeTypeException ex) {
-            assertTrue(false);
+            fail();
         }
 
         // Must not pass values by default
