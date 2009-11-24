@@ -133,9 +133,9 @@ public class CompoundPipeTest {
         }
 
         // Must have connected only *until* the first type error
-        assertTrue(pipe1.hasConsumer());
+        assertFalse(pipe1.hasConsumer());
         assertFalse(pipe2.hasConsumer());
-        assertFalse(pipe3.hasConsumer());
+        assertTrue(pipe3.hasConsumer());
         assertFalse(pipe4.hasConsumer());
     }
 }

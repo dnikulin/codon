@@ -62,13 +62,18 @@ public class CompoundPipe implements Pipe {
         linkPipes();
     }
 
-    /** Connect adjacent pipes in the pipeline. Throws on type error. */
+    /**
+     * Connect adjacent pipes in the pipeline, starting from the last pipe.
+     * Throws on type error.
+     */
     private void linkPipes() throws PipeTypeException {
         Pipe prev = null;
 
-        for (Pipe pipe : pipes) {
+        for (int i = pipes.size() - 1; i >= 0; i--) {
+            Pipe pipe = pipes.get(i);
+
             if (prev != null)
-                PipeLinker.linkPipes(prev, pipe);
+                PipeLinker.linkPipes(pipe, prev);
             prev = pipe;
         }
     }
