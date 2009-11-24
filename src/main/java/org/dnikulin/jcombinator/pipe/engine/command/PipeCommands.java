@@ -44,7 +44,7 @@ public class PipeCommands {
     }
 
     /**
-     * Register a pipe command.
+     * Register a pipe command with a specific name.
      * 
      * @param commandName
      *            Command name to register
@@ -61,6 +61,18 @@ public class PipeCommands {
             throw new PipeNameInUseException("Command name is already in use");
 
         commands.put(commandName, command);
+    }
+
+    /**
+     * Register a pipe command with its default name.
+     * 
+     * @param command
+     *            Command object to register
+     */
+    public void add(PipeCommand command) throws PipeNameInvalidException,
+            PipeNameInUseException {
+
+        add(command.getCommandName(), command);
     }
 
     /**

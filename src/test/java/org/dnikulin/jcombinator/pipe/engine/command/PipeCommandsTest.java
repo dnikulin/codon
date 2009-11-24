@@ -45,6 +45,19 @@ public class PipeCommandsTest {
         PipeCommand cmd = TestPipeCommand.INSTANCE;
 
         try {
+            // Must be able to register commands with their default names
+            commands.add(cmd);
+
+            assertSame(cmd, commands.get("test"));
+        } catch (PipeNameInvalidException ex) {
+            fail();
+        } catch (PipeNameInUseException ex) {
+            fail();
+        } catch (PipeNotFoundException ex) {
+            fail();
+        }
+
+        try {
             // Must be able to register the same command with multiple names
             commands.add("test1", cmd);
             commands.add("test2", cmd);
