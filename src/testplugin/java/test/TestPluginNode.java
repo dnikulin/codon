@@ -24,14 +24,55 @@
 
 package test;
 
+import org.dnikulin.jcombinator.log.LineLogger;
+import org.dnikulin.jcombinator.pipe.command.PipeCommand;
+import org.dnikulin.jcombinator.pipe.command.PipeCommands;
+import org.dnikulin.jcombinator.pipe.command.PipeCommandsPluginNode;
+import org.dnikulin.jcombinator.pipe.core.Pipe;
+import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
+import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
+import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;
+import org.dnikulin.jcombinator.pipe.nulled.NullPipe;
 import org.dnikulin.jcombinator.plugin.PluginNode;
 
-public class TestPluginNode implements PluginNode {
+public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
+
+    @Override
     public String getPluginName() {
         return "Test plugin node";
     }
 
+    @Override
     public String getPluginVersion() {
         return "0";
+    }
+
+    @Override
+    public void addPipeCommands(PipeCommands commands)
+            throws PipeNameInvalidException, PipeNameInUseException {
+        commands.add(this);
+    }
+
+    @Override
+    public String getCommandTopic() {
+        return "test";
+    }
+
+    @Override
+    public String getCommandName() {
+        return "testplug";
+    }
+
+    @Override
+    public String getCommandUsage() {
+        return "";
+    }
+
+    @Override
+    public Pipe execute(String[] tokens, LineLogger log)
+            throws PipeFactoryException {
+
+        log.print("Test plugin working");
+        return NullPipe.INSTANCE;
     }
 }

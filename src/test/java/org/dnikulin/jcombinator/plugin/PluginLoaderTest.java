@@ -44,6 +44,7 @@ import org.dnikulin.jcombinator.log.CountingLogger;
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.log.PrintLogger;
+import org.dnikulin.jcombinator.pipe.command.PipeCommandsPluginNode;
 import org.junit.Test;
 
 public class PluginLoaderTest {
@@ -175,7 +176,7 @@ public class PluginLoaderTest {
         assertEquals(className, testClass.getName());
 
         // Must have only loaded this class and its dependencies
-        assertEquals(3, loader.getLoadedClasses().size());
+        assertEquals(4, loader.getLoadedClasses().size());
 
         // Must no longer attempt to parse class
         // Test by corrupting class bytes
@@ -192,7 +193,7 @@ public class PluginLoaderTest {
         assertEquals(0, log.count());
 
         // Must have not loaded any additional classes
-        assertEquals(3, loader.getLoadedClasses().size());
+        assertEquals(4, loader.getLoadedClasses().size());
     }
 
     /**
@@ -250,7 +251,7 @@ public class PluginLoaderTest {
         assertEquals(slotClassName, slotClass.getName());
 
         // Must have only loaded those classes and their dependencies
-        assertEquals(5, loader.getLoadedClasses().size());
+        assertEquals(6, loader.getLoadedClasses().size());
     }
 
     /**
@@ -390,16 +391,16 @@ public class PluginLoaderTest {
         // Must load exactly three classes if given "PluginNode"
         // (TestPluginNode, PluginNode and Object)
         loader.loadClasses("PluginNode");
-        assertEquals(3, loader.getLoadedClasses().size());
+        assertEquals(4, loader.getLoadedClasses().size());
 
         // Subsequent invocation must be idempotent
         loader.loadClasses("PluginNode");
-        assertEquals(3, loader.getLoadedClasses().size());
+        assertEquals(4, loader.getLoadedClasses().size());
 
         // Must load exactly two more classes if given "PluginSlot"
         // (TestPluginSlot, PluginSlot)
         loader.loadClasses("PluginSlot");
-        assertEquals(5, loader.getLoadedClasses().size());
+        assertEquals(6, loader.getLoadedClasses().size());
 
         // Must have logged nothing so far
         assertEquals(0, log.count());
@@ -407,9 +408,9 @@ public class PluginLoaderTest {
         // Must have loaded correct classes from parent
         List<Class<?>> loaded = loader.getLoadedClasses();
         assertFalse(loaded.contains(null));
-        assertEquals(5, loaded.size());
+        assertEquals(6, loaded.size());
         assertTrue(loaded.contains(Object.class));
-        assertTrue(loaded.contains(PluginNode.class));
+        assertTrue(loaded.contains(PipeCommandsPluginNode.class));
         assertTrue(loaded.contains(PluginSlot.class));
 
         // Must have loaded correct classes from imported bytes
