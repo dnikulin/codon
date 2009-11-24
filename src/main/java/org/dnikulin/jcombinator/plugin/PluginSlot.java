@@ -37,7 +37,7 @@ public interface PluginSlot {
     public String getPluginSlotName();
 
     /**
-     * Query expect plugin node superclass/interface.
+     * Query expected plugin node superclass/interface.
      * 
      * @return Plugin node superclass/interface
      */
