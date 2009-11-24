@@ -60,6 +60,6 @@ public interface PipeCommand {
      * @param log
      *            Line logger
      */
-    public Pipe makePipe(String[] tokens, LineLogger log)
+    public Pipe execute(String[] tokens, LineLogger log)
             throws PipeFactoryException;
 }
