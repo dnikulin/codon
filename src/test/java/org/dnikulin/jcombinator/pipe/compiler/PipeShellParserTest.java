@@ -147,6 +147,12 @@ public class PipeShellParserTest {
             Pipe pipe5 = linker.getPipe("pipe5");
             assertTrue(pipe5 instanceof CompoundPipe);
             assertFalse(pipe5.hasConsumer());
+
+            // Must support comments after pipelines
+            compile("test # A test pipe");
+
+            // Must support comment-only lines
+            compile("# Comment");
         } catch (PipeNotFoundException ex) {
             ex.printStackTrace();
             fail();
