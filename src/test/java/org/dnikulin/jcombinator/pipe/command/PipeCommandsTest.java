@@ -48,7 +48,7 @@ public class PipeCommandsTest {
             // Must be able to register commands with their default names
             commands.add(cmd);
 
-            assertSame(cmd, commands.get("test"));
+            assertSame(cmd, commands.get(cmd.getCommandName()));
         } catch (PipeNameInvalidException ex) {
             fail();
         } catch (PipeNameInUseException ex) {

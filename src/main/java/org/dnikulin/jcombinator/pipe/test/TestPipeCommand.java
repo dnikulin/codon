@@ -84,7 +84,7 @@ public class TestPipeCommand implements PipeCommand {
 
     @Override
     public String getCommandName() {
-        return "test";
+        return "testpipe";
     }
 
     @Override
