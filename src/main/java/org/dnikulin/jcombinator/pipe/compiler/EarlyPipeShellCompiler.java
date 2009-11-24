@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.pipe.command.PipeCommands;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
@@ -37,6 +38,8 @@ import org.dnikulin.jcombinator.pipe.simple.CompoundPipe;
 
 /** A pipe compiler that performs all actions as early as possible. */
 public class EarlyPipeShellCompiler implements PipeShellCompiler {
+    private final LineLogger logger;
+
     private final PipeCommands commands;
     private final PipeLinker linker;
 
@@ -45,14 +48,40 @@ public class EarlyPipeShellCompiler implements PipeShellCompiler {
 
     private String pipeName;
 
-    /** Construct a compiler with the given command registry and pipe linker. */
-    public EarlyPipeShellCompiler(PipeCommands commands, PipeLinker linker) {
+    /**
+     * Construct a compiler with the given logger, command registry and pipe
+     * linker.
+     * 
+     * @param logger
+     *            Line logger
+     * @param commands
+     *            Pipe command registry
+     * @param linker
+     *            Pipe linker
+     */
+    public EarlyPipeShellCompiler(LineLogger logger, PipeCommands commands,
+            PipeLinker linker) {
+
+        this.logger = logger;
         this.commands = commands;
         this.linker = linker;
 
         lineStack = new Stack<List<Pipe>>();
         nameStack = new Stack<String>();
         pipeName = null;
+    }
+
+    /**
+     * Construct a compiler with the given command registry and pipe linker. A
+     * null logger is used.
+     * 
+     * @param commands
+     *            Pipe command registry
+     * @param linker
+     *            Pipe linker
+     */
+    public EarlyPipeShellCompiler(PipeCommands commands, PipeLinker linker) {
+        this(NullLogger.INSTANCE, commands, linker);
     }
 
     /**
@@ -106,7 +135,7 @@ public class EarlyPipeShellCompiler implements PipeShellCompiler {
     public void takeCommand(String command, String[] tokens)
             throws PipeException {
 
-        Pipe pipe = commands.makePipe(command, tokens, NullLogger.INSTANCE);
+        Pipe pipe = commands.makePipe(command, tokens, logger);
 
         List<Pipe> line = lineStack.peek();
         line.add(pipe);
