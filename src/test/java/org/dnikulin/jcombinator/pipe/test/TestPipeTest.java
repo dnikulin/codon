@@ -36,7 +36,6 @@ import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.pipe.core.Consumer;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.core.Producer;
-import org.dnikulin.jcombinator.pipe.test.TestPipe;
 import org.junit.Test;
 
 public class TestPipeTest {
