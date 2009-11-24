@@ -27,6 +27,7 @@ package org.dnikulin.jcombinator.pipe.command;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.pipe.compiler.PipeLinker;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
@@ -101,8 +102,8 @@ public class PipeCommands {
      * 
      * @return Pipe object
      */
-    public Pipe makePipe(String commandName, String[] tokens)
+    public Pipe makePipe(String commandName, String[] tokens, LineLogger log)
             throws PipeNotFoundException, PipeFactoryException {
-        return get(commandName).makePipe(tokens);
+        return get(commandName).makePipe(tokens, log);
     }
 }

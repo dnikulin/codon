@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.pipe.command.PipeCommands;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeException;
@@ -105,7 +106,7 @@ public class EarlyPipeShellCompiler implements PipeShellCompiler {
     public void takeCommand(String command, String[] tokens)
             throws PipeException {
 
-        Pipe pipe = commands.makePipe(command, tokens);
+        Pipe pipe = commands.makePipe(command, tokens, NullLogger.INSTANCE);
 
         List<Pipe> line = lineStack.peek();
         line.add(pipe);

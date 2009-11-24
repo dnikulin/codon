@@ -29,6 +29,8 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.dnikulin.jcombinator.log.LineLogger;
+import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
@@ -41,6 +43,7 @@ import org.junit.Test;
 public class PipeCommandsTest {
     @Test
     public void testPipeCommands() {
+        LineLogger log = NullLogger.INSTANCE;
         PipeCommands commands = new PipeCommands();
         PipeCommand cmd = TestPipeCommand.INSTANCE;
 
@@ -114,7 +117,7 @@ public class PipeCommandsTest {
 
         try {
             // Must allow construction for correct names and tokens
-            Pipe pipe = commands.makePipe("test1", new String[] {});
+            Pipe pipe = commands.makePipe("test1", new String[] {}, log);
 
             assertNotNull(pipe);
             assertTrue(pipe instanceof TestPipe);
@@ -128,7 +131,7 @@ public class PipeCommandsTest {
 
         try {
             // Must propagate exceptions from commands
-            commands.makePipe("test1", new String[] { "org.NoClass" });
+            commands.makePipe("test1", new String[] { "org.NoClass" }, log);
 
             // Must not reach
             fail();

@@ -30,6 +30,7 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
+import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
 import org.junit.Test;
@@ -59,7 +60,7 @@ public class TestPipeCommandTest {
         String[] tokens = new String[] { "org.NoClass" };
 
         try {
-            TestPipeCommand.INSTANCE.makePipe(tokens);
+            TestPipeCommand.INSTANCE.makePipe(tokens, NullLogger.INSTANCE);
 
             // Must not reach
             fail();
@@ -72,7 +73,8 @@ public class TestPipeCommandTest {
             String... tokens) {
 
         try {
-            Pipe pipe = TestPipeCommand.INSTANCE.makePipe(tokens);
+            Pipe pipe = TestPipeCommand.INSTANCE.makePipe(tokens,
+                    NullLogger.INSTANCE);
 
             assertNotNull(pipe);
             assertSame(wantInClass, pipe.getInputType());

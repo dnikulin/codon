@@ -24,6 +24,7 @@
 
 package org.dnikulin.jcombinator.pipe.command;
 
+import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
 
@@ -56,6 +57,9 @@ public interface PipeCommand {
      * 
      * @param tokens
      *            Argument tokens
+     * @param log
+     *            Line logger
      */
-    public Pipe makePipe(String[] tokens) throws PipeFactoryException;
+    public Pipe makePipe(String[] tokens, LineLogger log)
+            throws PipeFactoryException;
 }

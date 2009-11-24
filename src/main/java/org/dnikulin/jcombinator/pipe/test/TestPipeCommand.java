@@ -24,6 +24,7 @@
 
 package org.dnikulin.jcombinator.pipe.test;
 
+import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.pipe.command.PipeCommand;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
@@ -34,7 +35,9 @@ public class TestPipeCommand implements PipeCommand {
     public static final TestPipeCommand INSTANCE = new TestPipeCommand();
 
     @Override
-    public Pipe makePipe(String[] tokens) throws PipeFactoryException {
+    public Pipe makePipe(String[] tokens, LineLogger log)
+            throws PipeFactoryException {
+
         switch (tokens.length) {
         case 0:
             return new TestPipe();
