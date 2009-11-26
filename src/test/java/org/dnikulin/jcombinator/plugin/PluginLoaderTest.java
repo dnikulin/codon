@@ -44,7 +44,7 @@ import org.dnikulin.jcombinator.log.CountingLogger;
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
 import org.dnikulin.jcombinator.log.PrintLogger;
-import org.dnikulin.jcombinator.pipe.command.PipeCommandsPluginNode;
+import org.dnikulin.jcombinator.pipe.command.registry.PipeCommandsPluginNode;
 import org.junit.Test;
 
 public class PluginLoaderTest {

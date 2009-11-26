@@ -31,6 +31,7 @@ import static org.junit.Assert.fail;
 
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
+import org.dnikulin.jcombinator.pipe.command.registry.PipeCommands;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;

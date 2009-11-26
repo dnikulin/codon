@@ -22,20 +22,42 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.jcombinator.pipe.command;
+package org.dnikulin.jcombinator.pipe.command.registry;
 
-import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
-import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;
+import org.dnikulin.jcombinator.pipe.except.PipeException;
 import org.dnikulin.jcombinator.plugin.PluginNode;
+import org.dnikulin.jcombinator.plugin.PluginSlot;
 
-/** A plugin node that add pipe commands. */
-public interface PipeCommandsPluginNode extends PluginNode {
+/** A plugin slot allowing pipe commands to be added to a registry. */
+public class PipeCommandsPluginSlot implements PluginSlot {
+    private final PipeCommands commands;
+
     /**
-     * Add pipe commands to a command registry.
+     * Construct a plugin slot with the given command registry.
      * 
      * @param commands
      *            Command registry
      */
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException;
+    public PipeCommandsPluginSlot(PipeCommands commands) {
+        this.commands = commands;
+    }
+
+    @Override
+    public String getPluginSlotName() {
+        return "Pipe commands";
+    }
+
+    @Override
+    public Class<? extends PluginNode> getPluginInterface() {
+        return PipeCommandsPluginNode.class;
+    }
+
+    @Override
+    public void installPlugin(PluginNode plugin) {
+        try {
+            ((PipeCommandsPluginNode) plugin).addPipeCommands(commands);
+        } catch (PipeException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

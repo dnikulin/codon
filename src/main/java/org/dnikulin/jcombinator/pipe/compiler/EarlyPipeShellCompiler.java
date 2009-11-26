@@ -30,7 +30,7 @@ import java.util.Stack;
 
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.log.NullLogger;
-import org.dnikulin.jcombinator.pipe.command.PipeCommands;
+import org.dnikulin.jcombinator.pipe.command.registry.PipeCommands;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeException;
 import org.dnikulin.jcombinator.pipe.except.PipeSyntaxException;

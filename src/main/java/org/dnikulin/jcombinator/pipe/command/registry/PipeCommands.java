@@ -22,12 +22,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.jcombinator.pipe.command;
+package org.dnikulin.jcombinator.pipe.command.registry;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.dnikulin.jcombinator.log.LineLogger;
+import org.dnikulin.jcombinator.pipe.command.PipeCommand;
 import org.dnikulin.jcombinator.pipe.compiler.PipeLinker;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;

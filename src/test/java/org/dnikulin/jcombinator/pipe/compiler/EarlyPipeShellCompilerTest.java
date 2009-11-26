@@ -28,7 +28,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.dnikulin.jcombinator.pipe.command.PipeCommands;
+import org.dnikulin.jcombinator.pipe.command.registry.PipeCommands;
 import org.dnikulin.jcombinator.pipe.except.PipeException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInvalidException;

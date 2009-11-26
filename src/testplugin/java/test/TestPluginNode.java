@@ -26,8 +26,8 @@ package test;
 
 import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.pipe.command.PipeCommand;
-import org.dnikulin.jcombinator.pipe.command.PipeCommands;
-import org.dnikulin.jcombinator.pipe.command.PipeCommandsPluginNode;
+import org.dnikulin.jcombinator.pipe.command.registry.PipeCommands;
+import org.dnikulin.jcombinator.pipe.command.registry.PipeCommandsPluginNode;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
 import org.dnikulin.jcombinator.pipe.except.PipeNameInUseException;
