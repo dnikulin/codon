@@ -35,18 +35,18 @@ public class TestPipeCommand implements PipeCommand {
     public static final TestPipeCommand INSTANCE = new TestPipeCommand();
 
     @Override
-    public Pipe makePipe(String[] tokens, LineLogger log)
+    public Pipe makePipe(String[] args, LineLogger log)
             throws PipeFactoryException {
 
-        switch (tokens.length) {
+        switch (args.length) {
         case 0:
             return new TestPipe();
 
         case 1:
-            return makePipe(tokens[0], tokens[0]);
+            return makePipe(args[0], args[0]);
 
         case 2:
-            return makePipe(tokens[0], tokens[1]);
+            return makePipe(args[0], args[1]);
 
         default:
             throw new PipeFactoryException("Usage: " + getCommandUsage());

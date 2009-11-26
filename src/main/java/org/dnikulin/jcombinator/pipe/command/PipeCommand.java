@@ -34,11 +34,11 @@ public interface PipeCommand extends Command {
      * Execute the command to produce a pipe. Throws PipeFactoryException if
      * pipe creation failed.
      * 
-     * @param tokens
-     *            Argument tokens
+     * @param args
+     *            Command arguments
      * @param log
      *            Line logger
      */
-    public Pipe makePipe(String[] tokens, LineLogger log)
+    public Pipe makePipe(String[] args, LineLogger log)
             throws PipeFactoryException;
 }

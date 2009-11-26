@@ -69,7 +69,7 @@ public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
     }
 
     @Override
-    public Pipe makePipe(String[] tokens, LineLogger log)
+    public Pipe makePipe(String[] args, LineLogger log)
             throws PipeFactoryException {
 
         log.print("Test plugin working");
