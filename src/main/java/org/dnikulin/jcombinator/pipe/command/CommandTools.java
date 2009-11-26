@@ -24,8 +24,24 @@
 
 package org.dnikulin.jcombinator.pipe.command;
 
+import org.dnikulin.jcombinator.log.LineLogger;
+
 /** Utility methods for shell commands. */
 public final class CommandTools {
+    /**
+     * Print command usage suggestion to a line logger.
+     * 
+     * @param log
+     *            Line logger
+     * @param cmd
+     *            Command
+     */
+    public static void printUsage(LineLogger log, Command cmd) {
+        String name = cmd.getCommandName();
+        String usage = cmd.getCommandUsage();
+        log.print("Usage: " + name + " " + usage);
+    }
+
     private CommandTools() {
     }
 }
