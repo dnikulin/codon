@@ -28,8 +28,8 @@ import org.dnikulin.jcombinator.log.LineLogger;
 import org.dnikulin.jcombinator.pipe.core.Pipe;
 import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
 
-/** A CLI-style command which produces a pipe. */
-public interface PipeCommand {
+/** A shell command executed to produce a pipe. */
+public interface PipeCommand extends Command {
     /**
      * Query command topic, e.g. networking.
      * 
