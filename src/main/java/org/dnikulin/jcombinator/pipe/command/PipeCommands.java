@@ -115,6 +115,6 @@ public class PipeCommands {
      */
     public Pipe makePipe(String commandName, String[] tokens, LineLogger log)
             throws PipeNotFoundException, PipeFactoryException {
-        return get(commandName).execute(tokens, log);
+        return get(commandName).makePipe(tokens, log);
     }
 }

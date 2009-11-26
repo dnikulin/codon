@@ -60,7 +60,7 @@ public class TestPipeCommandTest {
         String[] tokens = new String[] { "org.NoClass" };
 
         try {
-            TestPipeCommand.INSTANCE.execute(tokens, NullLogger.INSTANCE);
+            TestPipeCommand.INSTANCE.makePipe(tokens, NullLogger.INSTANCE);
 
             // Must not reach
             fail();
@@ -73,7 +73,7 @@ public class TestPipeCommandTest {
             String... tokens) {
 
         try {
-            Pipe pipe = TestPipeCommand.INSTANCE.execute(tokens,
+            Pipe pipe = TestPipeCommand.INSTANCE.makePipe(tokens,
                     NullLogger.INSTANCE);
 
             assertNotNull(pipe);

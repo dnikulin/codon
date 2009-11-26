@@ -35,7 +35,7 @@ public class TestPipeCommand implements PipeCommand {
     public static final TestPipeCommand INSTANCE = new TestPipeCommand();
 
     @Override
-    public Pipe execute(String[] tokens, LineLogger log)
+    public Pipe makePipe(String[] tokens, LineLogger log)
             throws PipeFactoryException {
 
         switch (tokens.length) {

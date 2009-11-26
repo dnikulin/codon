@@ -31,14 +31,14 @@ import org.dnikulin.jcombinator.pipe.except.PipeFactoryException;
 /** A shell command executed to produce a pipe. */
 public interface PipeCommand extends Command {
     /**
-     * Produce a pipe based on the given argument string tokens. Throws
-     * PipeFactoryException if pipe creation failed.
+     * Execute the command to produce a pipe. Throws PipeFactoryException if
+     * pipe creation failed.
      * 
      * @param tokens
      *            Argument tokens
      * @param log
      *            Line logger
      */
-    public Pipe execute(String[] tokens, LineLogger log)
+    public Pipe makePipe(String[] tokens, LineLogger log)
             throws PipeFactoryException;
 }
