@@ -26,5 +26,24 @@ package org.dnikulin.jcombinator.pipe.command;
 
 /** A shell command. */
 public interface Command {
+    /**
+     * Query command topic.
+     * 
+     * @return Command topic string
+     */
+    public String getCommandTopic();
 
+    /**
+     * Query intended command name.
+     * 
+     * @return Command name string
+     */
+    public String getCommandName();
+
+    /**
+     * Query command usage specification.
+     * 
+     * @return Command usage string
+     */
+    public String getCommandUsage();
 }
