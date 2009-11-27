@@ -22,21 +22,34 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.compiler;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+import org.dnikulin.codon.pipe.except.PipeException;
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
-    }
+/** A pipe compiler instructed by parsed shell lines. */
+public interface PipeShellCompiler {
+    /** Start compiling a new line. */
+    public void startCompile();
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
+    /** Finish compiling a line. */
+    public void stopCompile() throws PipeException;
 
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
-    }
+    /** Process a complete single-pipe command. */
+    public void takeCommand(String command, String[] tokens)
+            throws PipeException;
+
+    /**
+     * Store a pipe name. This may be a reference to an existing pipe, or a name
+     * for a new pipe, depending on following calls.
+     */
+    public void takePipeName(String name) throws PipeException;
+
+    /** Interpret an explicit pipe link. */
+    public void takePipeLink() throws PipeException;
+
+    /** Start a compound pipe. Should act as an implicit link point. */
+    public void takeGroupStart() throws PipeException;
+
+    /** End a compound pipe. Should act as an implicit link point. */
+    public void takeGroupEnd() throws PipeException;
 }

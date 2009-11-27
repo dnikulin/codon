@@ -22,21 +22,49 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.misc;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
-    }
+import org.dnikulin.codon.misc.ParserToken;
+import org.junit.Test;
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
+public class ParserTokenTest {
+    @Test
+    public void testParserToken() {
+        final String empty = "";
 
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
+        ParserToken token = new ParserToken();
+
+        // Must start with 0 length
+        assertEquals(0, token.length());
+        assertEquals(empty, token.toString());
+        assertEquals(empty, token.drain());
+
+        // Must start with non-zero capacity
+        assertTrue(token.capacity() > 0);
+
+        // Must increment length once per character
+        token.append('a');
+        assertEquals(1, token.length());
+        token.append('b');
+        assertEquals(2, token.length());
+
+        // Must harmlessly return token for toString()
+        assertEquals("ab", token.toString());
+        assertEquals("ab", token.toString());
+
+        // Must return and clear for drain()
+        assertEquals("ab", token.drain());
+        assertEquals(empty, token.drain());
+
+        // Must reset to 0 on reset()
+        token.append('a');
+        token.append('b');
+        assertEquals(2, token.length());
+        token.reset();
+        assertEquals(0, token.length());
+        assertEquals(empty, token.toString());
     }
 }

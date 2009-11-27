@@ -22,57 +22,28 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.plugin.mock;
 
-import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
-import org.dnikulin.codon.pipe.core.Pipe;
-import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
-import org.dnikulin.codon.pipe.nulled.NullPipe;
 import org.dnikulin.codon.plugin.PluginNode;
+import org.dnikulin.codon.plugin.PluginSlot;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
+/** A featureless plugin slot for testing purposes. */
+public class NullPluginSlot implements PluginSlot {
+    /** Singleton instance. */
+    public static final NullPluginSlot INSTANCE = new NullPluginSlot();
 
     @Override
-    public String getPluginName() {
-        return "Test plugin node";
+    public Class<? extends PluginNode> getPluginInterface() {
+        return NullPluginNode.class;
     }
 
     @Override
-    public String getPluginVersion() {
-        return "0";
+    public String getPluginSlotName() {
+        return "Null slot";
     }
 
     @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
-    }
-
-    @Override
-    public String getCommandTopic() {
-        return "test";
-    }
-
-    @Override
-    public String getCommandName() {
-        return "testplug";
-    }
-
-    @Override
-    public String getCommandUsage() {
-        return "";
-    }
-
-    @Override
-    public Pipe makePipe(String[] args, LineLogger log)
-            throws PipeFactoryException {
-
-        log.print("Test plugin working");
-        return NullPipe.INSTANCE;
+    public void installPlugin(PluginNode plugin) {
+        // Do nothing
     }
 }

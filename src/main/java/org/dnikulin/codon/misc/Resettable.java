@@ -22,21 +22,10 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.misc;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
-
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
-    }
-
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
-
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
-    }
+/** An object that may have its state reset. */
+public interface Resettable {
+    /** Reset object state. */
+    public void reset();
 }

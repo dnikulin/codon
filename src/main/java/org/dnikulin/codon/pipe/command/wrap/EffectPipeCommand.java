@@ -22,57 +22,57 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.command.wrap;
 
 import org.dnikulin.codon.log.LineLogger;
+import org.dnikulin.codon.pipe.command.EffectCommand;
 import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
 import org.dnikulin.codon.pipe.nulled.NullPipe;
-import org.dnikulin.codon.plugin.PluginNode;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
+/**
+ * A pipe command that allows an effect command to be executed as part of a
+ * pipeline.
+ */
+public class EffectPipeCommand implements PipeCommand, EffectCommand {
+    private final EffectCommand command;
 
-    @Override
-    public String getPluginName() {
-        return "Test plugin node";
+    /**
+     * Wrap an effect command in a pipe command.
+     * 
+     * @param command
+     *            Effect command
+     */
+    public EffectPipeCommand(EffectCommand command) {
+        this.command = command;
     }
 
     @Override
-    public String getPluginVersion() {
-        return "0";
-    }
-
-    @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
-    }
-
-    @Override
-    public String getCommandTopic() {
-        return "test";
-    }
-
-    @Override
-    public String getCommandName() {
-        return "testplug";
-    }
-
-    @Override
-    public String getCommandUsage() {
-        return "";
+    public void execute(String[] args, LineLogger log) {
+        command.execute(args, log);
     }
 
     @Override
     public Pipe makePipe(String[] args, LineLogger log)
             throws PipeFactoryException {
 
-        log.print("Test plugin working");
+        command.execute(args, log);
         return NullPipe.INSTANCE;
+    }
+
+    @Override
+    public String getCommandTopic() {
+        return command.getCommandTopic();
+    }
+
+    @Override
+    public String getCommandName() {
+        return command.getCommandName();
+    }
+
+    @Override
+    public String getCommandUsage() {
+        return command.getCommandUsage();
     }
 }

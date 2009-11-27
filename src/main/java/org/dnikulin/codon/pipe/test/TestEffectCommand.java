@@ -22,35 +22,20 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.test;
 
 import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
-import org.dnikulin.codon.pipe.core.Pipe;
-import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
-import org.dnikulin.codon.pipe.nulled.NullPipe;
-import org.dnikulin.codon.plugin.PluginNode;
+import org.dnikulin.codon.pipe.command.EffectCommand;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
+/** An effect command that prints its arguments. */
+public class TestEffectCommand implements EffectCommand {
+    /** Singleton instance. */
+    public static final TestEffectCommand INSTANCE = new TestEffectCommand();
 
     @Override
-    public String getPluginName() {
-        return "Test plugin node";
-    }
-
-    @Override
-    public String getPluginVersion() {
-        return "0";
-    }
-
-    @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
+    public void execute(String[] args, LineLogger log) {
+        for (String arg : args)
+            log.print("test called with argument: " + arg);
     }
 
     @Override
@@ -60,19 +45,11 @@ public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
 
     @Override
     public String getCommandName() {
-        return "testplug";
+        return "testeffect";
     }
 
     @Override
     public String getCommandUsage() {
-        return "";
-    }
-
-    @Override
-    public Pipe makePipe(String[] args, LineLogger log)
-            throws PipeFactoryException {
-
-        log.print("Test plugin working");
-        return NullPipe.INSTANCE;
+        return "[str0] ... [strN]";
     }
 }

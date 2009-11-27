@@ -22,57 +22,48 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.compiler;
 
-import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
-import org.dnikulin.codon.pipe.core.Pipe;
-import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
-import org.dnikulin.codon.pipe.nulled.NullPipe;
-import org.dnikulin.codon.plugin.PluginNode;
+import org.dnikulin.codon.pipe.except.PipeException;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
+/** A PipeShellCompiler that ignores all input. */
+public class NullPipeShellCompiler implements PipeShellCompiler {
+    /** Singleton instance. */
+    public static final NullPipeShellCompiler INSTANCE = new NullPipeShellCompiler();
 
     @Override
-    public String getPluginName() {
-        return "Test plugin node";
+    public void startCompile() {
+        // Do nothing
     }
 
     @Override
-    public String getPluginVersion() {
-        return "0";
+    public void stopCompile() throws PipeException {
+        // Do nothing
     }
 
     @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
+    public void takeCommand(String command, String[] tokens)
+            throws PipeException {
+        // Do nothing
     }
 
     @Override
-    public String getCommandTopic() {
-        return "test";
+    public void takePipeName(String name) throws PipeException {
+        // Do nothing
     }
 
     @Override
-    public String getCommandName() {
-        return "testplug";
+    public void takePipeLink() throws PipeException {
+        // Do nothing
     }
 
     @Override
-    public String getCommandUsage() {
-        return "";
+    public void takeGroupEnd() throws PipeException {
+        // Do nothing
     }
 
     @Override
-    public Pipe makePipe(String[] args, LineLogger log)
-            throws PipeFactoryException {
-
-        log.print("Test plugin working");
-        return NullPipe.INSTANCE;
+    public void takeGroupStart() throws PipeException {
+        // Do nothing
     }
 }

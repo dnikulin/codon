@@ -22,21 +22,28 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.command;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+/** A shell command. */
+public interface Command {
+    /**
+     * Query command topic.
+     * 
+     * @return Command topic string
+     */
+    public String getCommandTopic();
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
-    }
+    /**
+     * Query intended command name.
+     * 
+     * @return Command name string
+     */
+    public String getCommandName();
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
-
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
-    }
+    /**
+     * Query command usage specification.
+     * 
+     * @return Command usage string
+     */
+    public String getCommandUsage();
 }

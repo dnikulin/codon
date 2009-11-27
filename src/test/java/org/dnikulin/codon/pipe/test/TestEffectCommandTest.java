@@ -22,21 +22,31 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.test;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+import static org.junit.Assert.assertEquals;
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
-    }
+import org.dnikulin.codon.log.CountingLogger;
+import org.dnikulin.codon.pipe.test.TestEffectCommand;
+import org.junit.Test;
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
+public class TestEffectCommandTest {
+    @Test
+    public void testTestEffectCommand() {
+        CountingLogger log = new CountingLogger();
+        TestEffectCommand cmd = new TestEffectCommand();
 
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
+        for (int i = 0; i < 5; i++) {
+            String[] args = new String[i];
+            for (int j = 0; j < i; j++)
+                args[j] = "test-" + j;
+
+            log.reset();
+            assertEquals(0, log.count());
+
+            // Must log each argument
+            cmd.execute(args, log);
+            assertEquals(i, log.count());
+        }
     }
 }

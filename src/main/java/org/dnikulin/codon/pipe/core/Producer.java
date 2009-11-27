@@ -22,21 +22,44 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.core;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+/** An object producing object values of a specific type. */
+public interface Producer {
+    /**
+     * Query expected output type. All objects released to this object's
+     * consumers are expected to conform to this type.
+     * 
+     * @return Expected output type
+     */
+    public Class<?> getOutputType();
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
-    }
+    /**
+     * Add a consumer for this producer.
+     * 
+     * @param consumer
+     *            Consumer to add
+     * @return true iff the consumer was added
+     */
+    public boolean addConsumer(Consumer consumer);
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
+    /**
+     * Query whether the producer has at least one consumer.
+     * 
+     * @return true iff the producer has at least one consumer
+     */
+    public boolean hasConsumer();
 
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
-    }
+    /**
+     * Remove a specific consumer.
+     * 
+     * @param consumer
+     *            Consumer to remove
+     */
+    public void removeConsumer(Consumer consumer);
+
+    /**
+     * Remove all consumers.
+     */
+    public void removeConsumers();
 }

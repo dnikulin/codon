@@ -22,21 +22,39 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.log;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+import static org.junit.Assert.assertEquals;
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
-    }
+import org.dnikulin.codon.log.CountingLogger;
+import org.junit.Test;
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
+public class CountingLoggerTest {
+    @Test
+    public void testCountingLogger() {
+        CountingLogger log = new CountingLogger();
 
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
+        // Must start with count at 0
+        assertEquals(0, log.count());
+
+        // Must be able to set count
+        log.setCount(7);
+        assertEquals(7, log.count());
+
+        // Must increment count on print
+        log.print("Test 1");
+        assertEquals(8, log.count());
+
+        // Must support negative count
+        log.setCount(-7);
+        assertEquals(-7, log.count());
+
+        // Must increment count even when negative
+        log.print("Test 2");
+        assertEquals(-6, log.count());
+
+        // Must be able to reset count to 0
+        log.reset();
+        assertEquals(0, log.count());
     }
 }

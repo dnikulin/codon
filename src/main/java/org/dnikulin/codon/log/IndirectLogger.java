@@ -22,57 +22,41 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.log;
 
-import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
-import org.dnikulin.codon.pipe.core.Pipe;
-import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
-import org.dnikulin.codon.pipe.nulled.NullPipe;
-import org.dnikulin.codon.plugin.PluginNode;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
+/** A trivial thread-safe LineLogger wrapper. */
+public class IndirectLogger implements LineLogger, LogSource {
+    private final AtomicReference<LineLogger> logger;
 
-    @Override
-    public String getPluginName() {
-        return "Test plugin node";
+    /**
+     * Initialise with the given logger.
+     * 
+     * @param logger
+     *            Line logger
+     */
+    public IndirectLogger(LineLogger logger) {
+        this.logger = new AtomicReference<LineLogger>(logger);
+    }
+
+    /** Initialise with a null logger. */
+    public IndirectLogger() {
+        this(NullLogger.INSTANCE);
     }
 
     @Override
-    public String getPluginVersion() {
-        return "0";
+    public void print(String line) {
+        logger.get().print(line);
     }
 
     @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
+    public LineLogger getLineLogger() {
+        return logger.get();
     }
 
     @Override
-    public String getCommandTopic() {
-        return "test";
-    }
-
-    @Override
-    public String getCommandName() {
-        return "testplug";
-    }
-
-    @Override
-    public String getCommandUsage() {
-        return "";
-    }
-
-    @Override
-    public Pipe makePipe(String[] args, LineLogger log)
-            throws PipeFactoryException {
-
-        log.print("Test plugin working");
-        return NullPipe.INSTANCE;
+    public void setLineLogger(LineLogger logger) {
+        this.logger.set(NullLogger.or(logger));
     }
 }

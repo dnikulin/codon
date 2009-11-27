@@ -22,21 +22,26 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.command;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+import org.dnikulin.codon.log.LineLogger;
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
+/** Utility methods for shell commands. */
+public final class CommandTools {
+    /**
+     * Print command usage suggestion to a line logger.
+     * 
+     * @param log
+     *            Line logger
+     * @param cmd
+     *            Command
+     */
+    public static void printUsage(LineLogger log, Command cmd) {
+        String name = cmd.getCommandName();
+        String usage = cmd.getCommandUsage();
+        log.print("Usage: " + name + " " + usage);
     }
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
-
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
+    private CommandTools() {
     }
 }

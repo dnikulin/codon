@@ -22,57 +22,59 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.command.wrap;
 
+import org.dnikulin.codon.log.IndirectLogger;
 import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
-import org.dnikulin.codon.pipe.core.Pipe;
-import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
+import org.dnikulin.codon.pipe.command.ProducerCommand;
+import org.dnikulin.codon.pipe.core.Consumer;
 import org.dnikulin.codon.pipe.nulled.NullPipe;
-import org.dnikulin.codon.plugin.PluginNode;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
+/**
+ * A wrapper pipe that allows a producer command to be executed as part of a
+ * pipeline.
+ */
+public class ProducerCommandPipe extends NullPipe {
+    private final ProducerCommand command;
+    private final String[] arguments;
+    private final IndirectLogger logger;
 
-    @Override
-    public String getPluginName() {
-        return "Test plugin node";
+    /**
+     * Create a pipe that executes the given command whenever addConsumer() is
+     * called.
+     * 
+     * @param command
+     *            Producer command
+     * @param arguments
+     *            Command arguments
+     * @param logger
+     *            Initial line logger
+     */
+    public ProducerCommandPipe(ProducerCommand command, String[] arguments,
+            LineLogger logger) {
+        this.command = command;
+        this.arguments = arguments;
+        this.logger = new IndirectLogger(logger);
     }
 
     @Override
-    public String getPluginVersion() {
-        return "0";
+    public Class<?> getOutputType() {
+        return command.getOutputType();
     }
 
     @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
+    public boolean addConsumer(Consumer consumer) {
+        command.produce(arguments, logger, consumer);
+        return true;
     }
 
     @Override
-    public String getCommandTopic() {
-        return "test";
+    public LineLogger getLineLogger() {
+        return logger.getLineLogger();
     }
 
     @Override
-    public String getCommandName() {
-        return "testplug";
-    }
-
-    @Override
-    public String getCommandUsage() {
-        return "";
-    }
-
-    @Override
-    public Pipe makePipe(String[] args, LineLogger log)
-            throws PipeFactoryException {
-
-        log.print("Test plugin working");
-        return NullPipe.INSTANCE;
+    public void setLineLogger(LineLogger logger) {
+        this.logger.setLineLogger(logger);
     }
 }

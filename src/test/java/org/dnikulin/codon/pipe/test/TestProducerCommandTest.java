@@ -22,21 +22,41 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.test;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
-    }
+import org.dnikulin.codon.log.CountingLogger;
+import org.dnikulin.codon.pipe.command.ProducerCommand;
+import org.junit.Test;
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
+public class TestProducerCommandTest {
+    @Test
+    public void testProducerCommand() {
+        ProducerCommand cmd = TestProducerCommand.INSTANCE;
 
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
+        for (int i = 0; i < 5; i++) {
+            String[] args = new String[i];
+            for (int j = 0; j < i; j++)
+                args[j] = "test-" + j;
+
+            CountingLogger log = new CountingLogger();
+            TestPipe tpipe = new TestPipe();
+
+            for (int j = 1; j <= 5; j++) {
+                cmd.produce(args, log, tpipe);
+
+                // Must log once per consumer add
+                assertEquals(j, log.count());
+
+                // Must produce each argument once
+                assertEquals(j * i, tpipe.count());
+
+                Object last = tpipe.last();
+                if (last != null)
+                    assertSame(String.class, last.getClass());
+            }
+        }
     }
 }

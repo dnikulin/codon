@@ -22,21 +22,26 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.log;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+/** A LineLogger that ignores its given lines. */
+public class NullLogger implements LineLogger {
+    /** Singleton instance. */
+    public static final NullLogger INSTANCE = new NullLogger();
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
+    @Override
+    public void print(String line) {
+        // Ignore
     }
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
-
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
+    /**
+     * Return logger if logger is not null, otherwise return INSTANCE.
+     * 
+     * @param logger
+     *            Line logger candidate
+     * @return Non-null line logger
+     */
+    public static LineLogger or(LineLogger logger) {
+        return (logger == null) ? INSTANCE : logger;
     }
 }

@@ -22,21 +22,32 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.plugin;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+/**
+ * A slot for the installation of plugins. It is responsible for installing
+ * plugins into itself.
+ */
+public interface PluginSlot {
+    /**
+     * Query plugin slot name.
+     * 
+     * @return Plugin slot name
+     */
+    public String getPluginSlotName();
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
-    }
+    /**
+     * Query expected plugin node superclass/interface.
+     * 
+     * @return Plugin node superclass/interface
+     */
+    public Class<? extends PluginNode> getPluginInterface();
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
-    }
-
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
-    }
+    /**
+     * Attempt to install a plugin into this slot.
+     * 
+     * @param plugin
+     *            Plugin node to install
+     */
+    public void installPlugin(PluginNode plugin);
 }

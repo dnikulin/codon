@@ -22,57 +22,34 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.plugin;
 
-import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
-import org.dnikulin.codon.pipe.core.Pipe;
-import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
-import org.dnikulin.codon.pipe.nulled.NullPipe;
-import org.dnikulin.codon.plugin.PluginNode;
+/** A plugin slot that allows interaction with a plugin linker. */
+public class PluginLinkerPluginSlot implements PluginSlot {
+    private final PluginLinker linker;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
-
-    @Override
-    public String getPluginName() {
-        return "Test plugin node";
+    /**
+     * Construct a slot with the given linker.
+     * 
+     * @param linker
+     *            Plugin linker
+     */
+    public PluginLinkerPluginSlot(PluginLinker linker) {
+        this.linker = linker;
     }
 
     @Override
-    public String getPluginVersion() {
-        return "0";
+    public String getPluginSlotName() {
+        return "Plugin linker";
     }
 
     @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
+    public Class<? extends PluginNode> getPluginInterface() {
+        return PluginLinkerPluginNode.class;
     }
 
     @Override
-    public String getCommandTopic() {
-        return "test";
-    }
-
-    @Override
-    public String getCommandName() {
-        return "testplug";
-    }
-
-    @Override
-    public String getCommandUsage() {
-        return "";
-    }
-
-    @Override
-    public Pipe makePipe(String[] args, LineLogger log)
-            throws PipeFactoryException {
-
-        log.print("Test plugin working");
-        return NullPipe.INSTANCE;
+    public void installPlugin(PluginNode plugin) {
+        ((PluginLinkerPluginNode) plugin).addToPluginLinker(linker);
     }
 }

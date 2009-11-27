@@ -22,57 +22,73 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.nulled;
 
 import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
+import org.dnikulin.codon.log.NullLogger;
+import org.dnikulin.codon.pipe.core.Consumer;
 import org.dnikulin.codon.pipe.core.Pipe;
-import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
-import org.dnikulin.codon.pipe.nulled.NullPipe;
-import org.dnikulin.codon.plugin.PluginNode;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
+/** A pipe that performs no function and maintains no connections or state. */
+public class NullPipe implements Pipe {
+    /** Singleton instance. */
+    public static final NullPipe INSTANCE = new NullPipe();
+
+    // From Consumer
 
     @Override
-    public String getPluginName() {
-        return "Test plugin node";
+    public Class<?> getInputType() {
+        return NullPipeType.class;
     }
 
     @Override
-    public String getPluginVersion() {
-        return "0";
+    public void consume(Object value) {
+        // Do nothing
+    }
+
+    // From Producer
+
+    @Override
+    public Class<?> getOutputType() {
+        return NullPipeType.class;
     }
 
     @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
+    public boolean addConsumer(Consumer consumer) {
+        return false;
     }
 
     @Override
-    public String getCommandTopic() {
-        return "test";
+    public boolean hasConsumer() {
+        return false;
     }
 
     @Override
-    public String getCommandName() {
-        return "testplug";
+    public void removeConsumer(Consumer consumer) {
+        // Do nothing
     }
 
     @Override
-    public String getCommandUsage() {
-        return "";
+    public void removeConsumers() {
+        // Do nothing
+    }
+
+    // From LogSource
+
+    @Override
+    public LineLogger getLineLogger() {
+        return NullLogger.INSTANCE;
     }
 
     @Override
-    public Pipe makePipe(String[] args, LineLogger log)
-            throws PipeFactoryException {
+    public void setLineLogger(LineLogger logger) {
+        // Do nothing
+    }
 
-        log.print("Test plugin working");
-        return NullPipe.INSTANCE;
+    // From Resettable
+
+    @Override
+    public void reset() {
+        // Do nothing
     }
 }

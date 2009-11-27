@@ -22,21 +22,24 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.except;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+/** An exception where a pipe name is already used. */
+public class PipeNameInUseException extends PipeException {
+    private final static long serialVersionUID = 1L;
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
+    public PipeNameInUseException() {
     }
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
+    public PipeNameInUseException(String message) {
+        super(message);
     }
 
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
+    public PipeNameInUseException(Throwable cause) {
+        super(cause);
+    }
+
+    public PipeNameInUseException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

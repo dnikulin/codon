@@ -22,21 +22,24 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.except;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+/** A general pipe exception. */
+public class PipeException extends Exception {
+    private final static long serialVersionUID = 1L;
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
+    public PipeException() {
     }
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
+    public PipeException(String message) {
+        super(message);
     }
 
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
+    public PipeException(Throwable cause) {
+        super(cause);
+    }
+
+    public PipeException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

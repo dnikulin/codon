@@ -22,35 +22,62 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.test;
 
 import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
-import org.dnikulin.codon.pipe.nulled.NullPipe;
-import org.dnikulin.codon.plugin.PluginNode;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
+/** A pipe command that produces instances of TestPipe. */
+public class TestPipeCommand implements PipeCommand {
+    /** Stateless singleton instance. */
+    public static final TestPipeCommand INSTANCE = new TestPipeCommand();
 
     @Override
-    public String getPluginName() {
-        return "Test plugin node";
+    public Pipe makePipe(String[] args, LineLogger log)
+            throws PipeFactoryException {
+
+        switch (args.length) {
+        case 0:
+            return new TestPipe();
+
+        case 1:
+            return makePipe(args[0], args[0]);
+
+        case 2:
+            return makePipe(args[0], args[1]);
+
+        default:
+            throw new PipeFactoryException("Usage: " + getCommandUsage());
+        }
     }
 
-    @Override
-    public String getPluginVersion() {
-        return "0";
-    }
+    /**
+     * Construct a TestPipe using classes loaded by name. This uses the
+     * ClassLoader that loaded TestPipeCommand.
+     * 
+     * @param inputClassName
+     *            Input type class name
+     * @param outputClassName
+     *            Output type class name
+     * @return TestPipe instance
+     */
+    public static Pipe makePipe(String inputClassName, String outputClassName)
+            throws PipeFactoryException {
 
-    @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
+        // TODO: Enable use of specific ClassLoader
+        ClassLoader loader = TestPipeCommand.class.getClassLoader();
+
+        try {
+            Class<?> inputClass = loader.loadClass(inputClassName);
+            Class<?> outputClass = loader.loadClass(outputClassName);
+
+            return new TestPipe(inputClass, outputClass);
+        } catch (ClassNotFoundException ex) {
+            String msg = "Could not create TestPipe with given types";
+            throw new PipeFactoryException(msg, ex);
+        }
     }
 
     @Override
@@ -60,19 +87,11 @@ public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
 
     @Override
     public String getCommandName() {
-        return "testplug";
+        return "testpipe";
     }
 
     @Override
     public String getCommandUsage() {
-        return "";
-    }
-
-    @Override
-    public Pipe makePipe(String[] args, LineLogger log)
-            throws PipeFactoryException {
-
-        log.print("Test plugin working");
-        return NullPipe.INSTANCE;
+        return "[itype [otype]]";
     }
 }

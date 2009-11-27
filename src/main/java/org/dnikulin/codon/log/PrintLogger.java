@@ -22,21 +22,37 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.log;
 
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
+import java.io.PrintStream;
 
-public class TestPluginSlot implements PluginSlot {
-    public String getPluginSlotName() {
-        return "Test plugin slot";
+/** A LineLogger printing to a PrintStream. */
+public class PrintLogger implements LineLogger {
+    /** PrintLogger that prints to System.out */
+    public static final PrintLogger SYSOUT = new PrintLogger(System.out);
+
+    /** PrintLogger that prints to System.err */
+    public static final PrintLogger SYSERR = new PrintLogger(System.err);
+
+    private final PrintStream stream;
+
+    /** Construct a PrintLogger that prints to System.out */
+    public PrintLogger() {
+        this(System.out);
     }
 
-    public Class<? extends PluginNode> getPluginInterface() {
-        return TestPluginNode.class;
+    /**
+     * Construct a PrintLogger that prints to the given stream
+     * 
+     * @param stream
+     *            The stream to print to
+     */
+    public PrintLogger(PrintStream stream) {
+        this.stream = stream;
     }
 
-    public void installPlugin(PluginNode plugin) {
-        System.err.println("Installing plugin: " + plugin);
+    @Override
+    public synchronized void print(String line) {
+        stream.println(line);
     }
 }

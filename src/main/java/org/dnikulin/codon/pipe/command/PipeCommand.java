@@ -22,57 +22,23 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.command;
 
 import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
-import org.dnikulin.codon.pipe.nulled.NullPipe;
-import org.dnikulin.codon.plugin.PluginNode;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
-
-    @Override
-    public String getPluginName() {
-        return "Test plugin node";
-    }
-
-    @Override
-    public String getPluginVersion() {
-        return "0";
-    }
-
-    @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
-    }
-
-    @Override
-    public String getCommandTopic() {
-        return "test";
-    }
-
-    @Override
-    public String getCommandName() {
-        return "testplug";
-    }
-
-    @Override
-    public String getCommandUsage() {
-        return "";
-    }
-
-    @Override
+/** A shell command executed to produce a pipe. */
+public interface PipeCommand extends Command {
+    /**
+     * Execute the command to produce a pipe. Throws PipeFactoryException if
+     * pipe creation failed.
+     * 
+     * @param args
+     *            Command arguments
+     * @param log
+     *            Line logger
+     */
     public Pipe makePipe(String[] args, LineLogger log)
-            throws PipeFactoryException {
-
-        log.print("Test plugin working");
-        return NullPipe.INSTANCE;
-    }
+            throws PipeFactoryException;
 }

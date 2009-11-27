@@ -22,57 +22,42 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package test;
+package org.dnikulin.codon.pipe.command.registry;
 
-import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
-import org.dnikulin.codon.pipe.core.Pipe;
-import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.except.PipeNameInUseException;
-import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
-import org.dnikulin.codon.pipe.nulled.NullPipe;
+import org.dnikulin.codon.pipe.except.PipeException;
 import org.dnikulin.codon.plugin.PluginNode;
+import org.dnikulin.codon.plugin.PluginSlot;
 
-public class TestPluginNode implements PipeCommandsPluginNode, PipeCommand {
+/** A plugin slot allowing pipe commands to be added to a registry. */
+public class PipeCommandsPluginSlot implements PluginSlot {
+    private final PipeCommands commands;
 
-    @Override
-    public String getPluginName() {
-        return "Test plugin node";
+    /**
+     * Construct a plugin slot with the given command registry.
+     * 
+     * @param commands
+     *            Command registry
+     */
+    public PipeCommandsPluginSlot(PipeCommands commands) {
+        this.commands = commands;
     }
 
     @Override
-    public String getPluginVersion() {
-        return "0";
+    public String getPluginSlotName() {
+        return "Pipe commands";
     }
 
     @Override
-    public void addPipeCommands(PipeCommands commands)
-            throws PipeNameInvalidException, PipeNameInUseException {
-        commands.add(this);
+    public Class<? extends PluginNode> getPluginInterface() {
+        return PipeCommandsPluginNode.class;
     }
 
     @Override
-    public String getCommandTopic() {
-        return "test";
-    }
-
-    @Override
-    public String getCommandName() {
-        return "testplug";
-    }
-
-    @Override
-    public String getCommandUsage() {
-        return "";
-    }
-
-    @Override
-    public Pipe makePipe(String[] args, LineLogger log)
-            throws PipeFactoryException {
-
-        log.print("Test plugin working");
-        return NullPipe.INSTANCE;
+    public void installPlugin(PluginNode plugin) {
+        try {
+            ((PipeCommandsPluginNode) plugin).addPipeCommands(commands);
+        } catch (PipeException ex) {
+            ex.printStackTrace();
+        }
     }
 }

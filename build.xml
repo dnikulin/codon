@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<!-- JCombinator by Dmitri Nikulin -->
+<!-- Codon by Dmitri Nikulin -->
 
-<project basedir="." default="build" name="jcombinator">
+<project basedir="." default="build" name="codon">
     <path id="classpath-main">
         <pathelement location="bin/main" />
     </path>
@@ -30,7 +30,10 @@
             </copy>
 
             <!-- Compile with given settings -->
-            <javac srcdir="bin/@{name}" destdir="bin/@{name}" classpathref="classpath-test" debug="true" debuglevel="source,lines,vars" source="1.6" target="1.6" />
+            <javac srcdir="bin/@{name}" destdir="bin/@{name}"
+                   classpathref="classpath-test" debug="true"
+                   debuglevel="source,lines,vars"
+                   source="1.6" target="1.6" />
         </sequential>
     </macrodef>
 
@@ -47,9 +50,9 @@
         <compile name="test" />
         <compile name="testplugin" />
 
-        <jar destfile="bin/jcombinator.jar" basedir="bin/main" />
-        <jar destfile="bin/jcombinator-test.jar" basedir="bin/test" />
-        <jar destfile="bin/jcombinator-testplugin.jar" basedir="bin/testplugin" />
+        <jar destfile="bin/codon.jar" basedir="bin/main" />
+        <jar destfile="bin/codon-test.jar" basedir="bin/test" />
+        <jar destfile="bin/codon-testplugin.jar" basedir="bin/testplugin" />
     </target>
 
     <target depends="build-project" name="test">
