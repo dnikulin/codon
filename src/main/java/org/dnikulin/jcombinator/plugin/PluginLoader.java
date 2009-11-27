@@ -123,6 +123,16 @@ public class PluginLoader extends ClassLoader {
     public synchronized Class<?> loadClass(String className, boolean resolve)
             throws ClassNotFoundException {
 
+        // Check for class in parent class loader first
+        try {
+            Class<?> klass = getParent().loadClass(className);
+            assert (klass != null);
+            classes.put(className, klass);
+            return klass;
+        } catch (ClassNotFoundException ex) {
+            // Continue
+        }
+
         // Check for cached class
         Class<?> klass = classes.get(className);
         if (klass != null)
@@ -132,17 +142,9 @@ public class PluginLoader extends ClassLoader {
         byte[] classBytes = bytes.get(classToPath(className));
 
         if (classBytes == null) {
-            try {
-                // Check for class in parent class loader instead
-                klass = getParent().loadClass(className);
-                assert (klass != null);
-                classes.put(className, klass);
-                return klass;
-            } catch (ClassNotFoundException ex) {
-                logger.print("Loading class " + className
-                        + ", no bytes and not in parent loader");
-                throw ex;
-            }
+            String msg = "Class " + className + " not found in bytes or parent";
+            logger.print(msg);
+            throw new ClassNotFoundException(msg);
         }
 
         try {
