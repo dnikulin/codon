@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.codon.pipe.command;
+package org.dnikulin.codon.pipe.command.registry;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
 
 import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.log.NullLogger;
-import org.dnikulin.codon.pipe.command.registry.PipeCommands;
+import org.dnikulin.codon.pipe.command.PipeCommand;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
 import org.dnikulin.codon.pipe.except.PipeNameInUseException;
