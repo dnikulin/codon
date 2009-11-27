@@ -273,8 +273,9 @@ public class PluginLoader extends ClassLoader {
 
     /**
      * Import all files in a tree (starting with a single file or directory)
-     * recursively with a given prefix. Can be called for a package
-     * sub-hierarchy to restore correct package path.
+     * recursively with a given prefix. Jar files have their contents imported
+     * as well. Can be called for a package sub-hierarchy to restore correct
+     * package path.
      * 
      * @param root
      *            Directory tree root
@@ -292,6 +293,10 @@ public class PluginLoader extends ClassLoader {
                     }
                 }
             } else if (root.isFile() && root.canRead()) {
+                if (root.getName().endsWith(".jar"))
+                    importJar(root);
+
+                // Keep the jar just in case
                 importFile(root, head);
             }
         } catch (IOException ex) {
@@ -302,7 +307,7 @@ public class PluginLoader extends ClassLoader {
     /**
      * Import all files in a tree (starting with a single file or directory)
      * recursively. For classes, the root should be directly above the first
-     * package elemenet.
+     * package element.
      * 
      * @param root
      *            Directory tree root

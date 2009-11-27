@@ -314,6 +314,30 @@ public class PluginLoaderTest {
     }
 
     /**
+     * Must be able to silently import jars from trees.
+     */
+    @Test
+    public void testImportJarTree() throws IOException, ClassNotFoundException {
+        testImport(new ImportCode() {
+            public void run(PluginLoader loader) throws IOException {
+                String jar = "jcombinator-testplugin.jar";
+
+                File root = new File("bin/" + jar);
+                assertTrue(root.exists());
+                assertTrue(root.isFile());
+                assertTrue(root.canRead());
+                loader.importTree(root);
+
+                // Must keep the jar bytes
+                assertNotNull(loader.getBytes(jar));
+
+                // Must import its resources
+                assertNotNull(loader.getBytes("test/" + NODE_FILE));
+            };
+        });
+    }
+
+    /**
      * Must throw when loading corrupted class files.
      */
     @Test
