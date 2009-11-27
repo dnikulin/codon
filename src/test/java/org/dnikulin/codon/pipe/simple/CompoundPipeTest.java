@@ -36,7 +36,6 @@ import java.util.List;
 import org.dnikulin.codon.pipe.core.Consumer;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeTypeException;
-import org.dnikulin.codon.pipe.simple.CompoundPipe;
 import org.dnikulin.codon.pipe.test.TestPipe;
 import org.junit.Test;
 

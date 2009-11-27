@@ -34,7 +34,6 @@ import static org.junit.Assert.fail;
 
 import java.util.Set;
 
-import org.dnikulin.codon.pipe.compiler.PipeLinker;
 import org.dnikulin.codon.pipe.core.Consumer;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.core.Producer;

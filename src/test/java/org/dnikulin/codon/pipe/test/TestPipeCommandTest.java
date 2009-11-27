@@ -33,7 +33,6 @@ import java.util.List;
 import org.dnikulin.codon.log.NullLogger;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
-import org.dnikulin.codon.pipe.test.TestPipeCommand;
 import org.junit.Test;
 
 public class TestPipeCommandTest {

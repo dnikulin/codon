@@ -36,7 +36,6 @@ import org.dnikulin.codon.log.NullLogger;
 import org.dnikulin.codon.pipe.core.Consumer;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.core.Producer;
-import org.dnikulin.codon.pipe.test.TestPipe;
 import org.junit.Test;
 
 public class TestPipeTest {

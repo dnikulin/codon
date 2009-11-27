@@ -36,11 +36,6 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.compiler.EarlyPipeShellCompiler;
-import org.dnikulin.codon.pipe.compiler.NullPipeShellCompiler;
-import org.dnikulin.codon.pipe.compiler.PipeLinker;
-import org.dnikulin.codon.pipe.compiler.PipeShellCompiler;
-import org.dnikulin.codon.pipe.compiler.PipeShellParser;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeException;
 import org.dnikulin.codon.pipe.except.PipeNotFoundException;

@@ -26,7 +26,6 @@ package org.dnikulin.codon.log;
 
 import static org.junit.Assert.assertEquals;
 
-import org.dnikulin.codon.log.CountingLogger;
 import org.junit.Test;
 
 public class CountingLoggerTest {

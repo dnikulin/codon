@@ -45,10 +45,6 @@ import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.log.NullLogger;
 import org.dnikulin.codon.log.PrintLogger;
 import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
-import org.dnikulin.codon.plugin.PluginLinker;
-import org.dnikulin.codon.plugin.PluginLoader;
-import org.dnikulin.codon.plugin.PluginNode;
-import org.dnikulin.codon.plugin.PluginSlot;
 import org.junit.Test;
 
 public class PluginLoaderTest {

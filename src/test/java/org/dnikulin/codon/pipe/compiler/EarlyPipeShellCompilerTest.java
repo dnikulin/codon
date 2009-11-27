@@ -29,8 +29,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.compiler.EarlyPipeShellCompiler;
-import org.dnikulin.codon.pipe.compiler.PipeLinker;
 import org.dnikulin.codon.pipe.except.PipeException;
 import org.dnikulin.codon.pipe.except.PipeNameInUseException;
 import org.dnikulin.codon.pipe.except.PipeNameInvalidException;

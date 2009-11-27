@@ -27,7 +27,6 @@ package org.dnikulin.codon.misc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.dnikulin.codon.misc.ParserToken;
 import org.junit.Test;
 
 public class ParserTokenTest {

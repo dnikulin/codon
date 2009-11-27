@@ -27,9 +27,6 @@ package org.dnikulin.codon.log;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-import org.dnikulin.codon.log.CountingLogger;
-import org.dnikulin.codon.log.IndirectLogger;
-import org.dnikulin.codon.log.NullLogger;
 import org.junit.Test;
 
 public class IndirectLoggerTest {

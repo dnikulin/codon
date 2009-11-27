@@ -27,7 +27,6 @@ package org.dnikulin.codon.pipe.test;
 import static org.junit.Assert.assertEquals;
 
 import org.dnikulin.codon.log.CountingLogger;
-import org.dnikulin.codon.pipe.test.TestEffectCommand;
 import org.junit.Test;
 
 public class TestEffectCommandTest {

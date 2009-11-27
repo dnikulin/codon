@@ -31,7 +31,6 @@ import static org.junit.Assert.fail;
 
 import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.log.NullLogger;
-import org.dnikulin.codon.pipe.command.PipeCommand;
 import org.dnikulin.codon.pipe.command.registry.PipeCommands;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
