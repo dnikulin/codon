@@ -30,8 +30,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.log.NullLogger;
-import org.dnikulin.codon.pipe.core.Consumer;
-import org.dnikulin.codon.pipe.core.Pipe;
+import org.dnikulin.codon.pipe.Consumer;
+import org.dnikulin.codon.pipe.Pipe;
 
 /**
  * A simple pipe base class that manages a consumer list and line logger. All of

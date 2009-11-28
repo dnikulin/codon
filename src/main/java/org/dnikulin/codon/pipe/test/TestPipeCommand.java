@@ -25,8 +25,8 @@
 package org.dnikulin.codon.pipe.test;
 
 import org.dnikulin.codon.log.LineLogger;
+import org.dnikulin.codon.pipe.Pipe;
 import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
 
 /** A pipe command that produces instances of TestPipe. */

@@ -26,8 +26,8 @@ package org.dnikulin.codon.pipe.command.wrap;
 
 import org.dnikulin.codon.log.IndirectLogger;
 import org.dnikulin.codon.log.LineLogger;
+import org.dnikulin.codon.pipe.Consumer;
 import org.dnikulin.codon.pipe.command.ProducerCommand;
-import org.dnikulin.codon.pipe.core.Consumer;
 import org.dnikulin.codon.pipe.nulled.NullPipe;
 
 /**

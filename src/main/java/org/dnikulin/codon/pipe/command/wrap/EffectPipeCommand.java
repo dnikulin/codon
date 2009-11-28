@@ -26,8 +26,8 @@ package org.dnikulin.codon.pipe.command.wrap;
 
 import org.dnikulin.codon.command.EffectCommand;
 import org.dnikulin.codon.log.LineLogger;
+import org.dnikulin.codon.pipe.Pipe;
 import org.dnikulin.codon.pipe.command.PipeCommand;
-import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
 import org.dnikulin.codon.pipe.nulled.NullPipe;
 

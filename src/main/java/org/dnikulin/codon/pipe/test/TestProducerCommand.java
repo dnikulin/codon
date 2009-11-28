@@ -25,8 +25,8 @@
 package org.dnikulin.codon.pipe.test;
 
 import org.dnikulin.codon.log.LineLogger;
+import org.dnikulin.codon.pipe.Consumer;
 import org.dnikulin.codon.pipe.command.ProducerCommand;
-import org.dnikulin.codon.pipe.core.Consumer;
 
 /** A producer command that produces its arguments. */
 public class TestProducerCommand implements ProducerCommand {

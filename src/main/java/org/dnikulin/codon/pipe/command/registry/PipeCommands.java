@@ -29,12 +29,12 @@ import java.util.TreeMap;
 
 import org.dnikulin.codon.command.EffectCommand;
 import org.dnikulin.codon.log.LineLogger;
+import org.dnikulin.codon.pipe.Pipe;
 import org.dnikulin.codon.pipe.command.PipeCommand;
 import org.dnikulin.codon.pipe.command.ProducerCommand;
 import org.dnikulin.codon.pipe.command.wrap.EffectPipeCommand;
 import org.dnikulin.codon.pipe.command.wrap.ProducerPipeCommand;
 import org.dnikulin.codon.pipe.compiler.PipeLinker;
-import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
 import org.dnikulin.codon.pipe.except.PipeNameInUseException;
 import org.dnikulin.codon.pipe.except.PipeNameInvalidException;

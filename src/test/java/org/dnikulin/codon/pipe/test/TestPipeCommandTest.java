@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.dnikulin.codon.log.NullLogger;
-import org.dnikulin.codon.pipe.core.Pipe;
+import org.dnikulin.codon.pipe.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
 import org.junit.Test;
 

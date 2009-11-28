@@ -26,7 +26,7 @@ package org.dnikulin.codon.pipe.command;
 
 import org.dnikulin.codon.command.Command;
 import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.core.Consumer;
+import org.dnikulin.codon.pipe.Consumer;
 
 /** A command executed to feed values to a consumer. */
 public interface ProducerCommand extends Command {

@@ -30,8 +30,8 @@ import java.util.Stack;
 
 import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.log.NullLogger;
+import org.dnikulin.codon.pipe.Pipe;
 import org.dnikulin.codon.pipe.command.registry.PipeCommands;
-import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeException;
 import org.dnikulin.codon.pipe.except.PipeSyntaxException;
 import org.dnikulin.codon.pipe.simple.CompoundPipe;

@@ -28,7 +28,7 @@ import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.pipe.command.PipeCommand;
 import org.dnikulin.codon.pipe.command.registry.PipeCommands;
 import org.dnikulin.codon.pipe.command.registry.PipeCommandsPluginNode;
-import org.dnikulin.codon.pipe.core.Pipe;
+import org.dnikulin.codon.pipe.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
 import org.dnikulin.codon.pipe.except.PipeNameInUseException;
 import org.dnikulin.codon.pipe.except.PipeNameInvalidException;

@@ -34,9 +34,9 @@ import static org.junit.Assert.fail;
 
 import java.util.Set;
 
-import org.dnikulin.codon.pipe.core.Consumer;
-import org.dnikulin.codon.pipe.core.Pipe;
-import org.dnikulin.codon.pipe.core.Producer;
+import org.dnikulin.codon.pipe.Consumer;
+import org.dnikulin.codon.pipe.Pipe;
+import org.dnikulin.codon.pipe.Producer;
 import org.dnikulin.codon.pipe.except.PipeException;
 import org.dnikulin.codon.pipe.except.PipeNameInUseException;
 import org.dnikulin.codon.pipe.except.PipeNameInvalidException;

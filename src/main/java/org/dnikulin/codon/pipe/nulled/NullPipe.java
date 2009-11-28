@@ -26,8 +26,8 @@ package org.dnikulin.codon.pipe.nulled;
 
 import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.log.NullLogger;
-import org.dnikulin.codon.pipe.core.Consumer;
-import org.dnikulin.codon.pipe.core.Pipe;
+import org.dnikulin.codon.pipe.Consumer;
+import org.dnikulin.codon.pipe.Pipe;
 
 /** A pipe that performs no function and maintains no connections or state. */
 public class NullPipe implements Pipe {

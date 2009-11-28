@@ -26,7 +26,7 @@ package org.dnikulin.codon.pipe.command;
 
 import org.dnikulin.codon.command.Command;
 import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.core.Pipe;
+import org.dnikulin.codon.pipe.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
 
 /** A shell command executed to produce a pipe. */

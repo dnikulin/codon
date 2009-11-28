@@ -29,8 +29,8 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 import org.dnikulin.codon.log.CountingLogger;
+import org.dnikulin.codon.pipe.Pipe;
 import org.dnikulin.codon.pipe.command.ProducerCommand;
-import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
 import org.dnikulin.codon.pipe.test.TestPipe;
 import org.dnikulin.codon.pipe.test.TestProducerCommand;
