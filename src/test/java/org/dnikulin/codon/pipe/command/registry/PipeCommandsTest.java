@@ -25,18 +25,23 @@
 package org.dnikulin.codon.pipe.command.registry;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.log.NullLogger;
+import org.dnikulin.codon.pipe.command.EffectCommand;
 import org.dnikulin.codon.pipe.command.PipeCommand;
+import org.dnikulin.codon.pipe.command.wrap.EffectPipeCommand;
 import org.dnikulin.codon.pipe.core.Pipe;
+import org.dnikulin.codon.pipe.except.PipeException;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
 import org.dnikulin.codon.pipe.except.PipeNameInUseException;
 import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
 import org.dnikulin.codon.pipe.except.PipeNotFoundException;
+import org.dnikulin.codon.pipe.test.TestEffectCommand;
 import org.dnikulin.codon.pipe.test.TestPipe;
 import org.dnikulin.codon.pipe.test.TestPipeCommand;
 import org.junit.Test;
@@ -140,6 +145,26 @@ public class PipeCommandsTest {
             fail();
         } catch (PipeFactoryException ex) {
             // Correct
+        }
+    }
+
+    @Test
+    public void testEffectCommand() {
+        try {
+            PipeCommands commands = new PipeCommands();
+            EffectCommand cmd = TestEffectCommand.INSTANCE;
+
+            // Must add effect command as a pipe command
+            commands.add(cmd);
+
+            // Must use original command name
+            PipeCommand pcmd = commands.get(cmd.getCommandName());
+            assertNotSame(cmd, pcmd);
+
+            // Must use the EffectPipeCommand wrapper
+            assertTrue(pcmd instanceof EffectPipeCommand);
+        } catch (PipeException ex) {
+            fail();
         }
     }
 }
