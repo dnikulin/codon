@@ -30,7 +30,9 @@ import java.util.TreeMap;
 import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.pipe.command.EffectCommand;
 import org.dnikulin.codon.pipe.command.PipeCommand;
+import org.dnikulin.codon.pipe.command.ProducerCommand;
 import org.dnikulin.codon.pipe.command.wrap.EffectPipeCommand;
+import org.dnikulin.codon.pipe.command.wrap.ProducerPipeCommand;
 import org.dnikulin.codon.pipe.compiler.PipeLinker;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
@@ -89,6 +91,18 @@ public class PipeCommands {
             PipeNameInUseException {
 
         add(command.getCommandName(), new EffectPipeCommand(command));
+    }
+
+    /**
+     * Register a producer command as a pipe command.
+     * 
+     * @param command
+     *            Command object to register
+     */
+    public void add(ProducerCommand command) throws PipeNameInvalidException,
+            PipeNameInUseException {
+
+        add(command.getCommandName(), new ProducerPipeCommand(command));
     }
 
     /**
