@@ -22,28 +22,26 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.codon.pipe.command;
+package org.dnikulin.codon.command;
 
-/** A shell command. */
-public interface Command {
-    /**
-     * Query command topic.
-     * 
-     * @return Command topic string
-     */
-    public String getCommandTopic();
+import org.dnikulin.codon.log.LineLogger;
 
+/** Utility methods for shell commands. */
+public final class CommandTools {
     /**
-     * Query intended command name.
+     * Print command usage suggestion to a line logger.
      * 
-     * @return Command name string
+     * @param log
+     *            Line logger
+     * @param cmd
+     *            Command
      */
-    public String getCommandName();
+    public static void printUsage(LineLogger log, Command cmd) {
+        String name = cmd.getCommandName();
+        String usage = cmd.getCommandUsage();
+        log.print("Usage: " + name + " " + usage);
+    }
 
-    /**
-     * Query command usage specification.
-     * 
-     * @return Command usage string
-     */
-    public String getCommandUsage();
+    private CommandTools() {
+    }
 }

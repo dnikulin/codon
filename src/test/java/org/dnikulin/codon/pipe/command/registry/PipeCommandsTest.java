@@ -30,9 +30,9 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.dnikulin.codon.command.EffectCommand;
 import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.log.NullLogger;
-import org.dnikulin.codon.pipe.command.EffectCommand;
 import org.dnikulin.codon.pipe.command.PipeCommand;
 import org.dnikulin.codon.pipe.command.ProducerCommand;
 import org.dnikulin.codon.pipe.command.wrap.EffectPipeCommand;

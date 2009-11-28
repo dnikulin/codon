@@ -24,8 +24,8 @@
 
 package org.dnikulin.codon.pipe.test;
 
+import org.dnikulin.codon.command.EffectCommand;
 import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.EffectCommand;
 
 /** An effect command that prints its arguments. */
 public class TestEffectCommand implements EffectCommand {

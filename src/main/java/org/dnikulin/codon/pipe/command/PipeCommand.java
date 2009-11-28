@@ -24,6 +24,7 @@
 
 package org.dnikulin.codon.pipe.command;
 
+import org.dnikulin.codon.command.Command;
 import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;

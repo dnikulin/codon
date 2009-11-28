@@ -28,8 +28,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
+import org.dnikulin.codon.command.EffectCommand;
 import org.dnikulin.codon.log.CountingLogger;
-import org.dnikulin.codon.pipe.command.EffectCommand;
 import org.dnikulin.codon.pipe.core.Pipe;
 import org.dnikulin.codon.pipe.except.PipeFactoryException;
 import org.dnikulin.codon.pipe.nulled.NullPipe;

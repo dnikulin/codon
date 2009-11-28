@@ -27,8 +27,8 @@ package org.dnikulin.codon.pipe.command.registry;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.dnikulin.codon.command.EffectCommand;
 import org.dnikulin.codon.log.LineLogger;
-import org.dnikulin.codon.pipe.command.EffectCommand;
 import org.dnikulin.codon.pipe.command.PipeCommand;
 import org.dnikulin.codon.pipe.command.ProducerCommand;
 import org.dnikulin.codon.pipe.command.wrap.EffectPipeCommand;

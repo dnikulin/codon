@@ -22,26 +22,19 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.codon.pipe.command;
+package org.dnikulin.codon.command;
 
 import org.dnikulin.codon.log.LineLogger;
 
-/** Utility methods for shell commands. */
-public final class CommandTools {
+/** A shell command executed to achieve an effect. */
+public interface EffectCommand extends Command {
     /**
-     * Print command usage suggestion to a line logger.
+     * Execute command.
      * 
+     * @param args
+     *            Command arguments
      * @param log
      *            Line logger
-     * @param cmd
-     *            Command
      */
-    public static void printUsage(LineLogger log, Command cmd) {
-        String name = cmd.getCommandName();
-        String usage = cmd.getCommandUsage();
-        log.print("Usage: " + name + " " + usage);
-    }
-
-    private CommandTools() {
-    }
+    public void execute(String[] args, LineLogger log);
 }
