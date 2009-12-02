@@ -24,7 +24,8 @@
 
 package org.dnikulin.codon.commands;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.dnikulin.codon.log.CountingLogger;
 import org.dnikulin.codon.plugin.PluginLinker;
