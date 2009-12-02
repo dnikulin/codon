@@ -28,7 +28,7 @@ import org.dnikulin.codon.pipe.except.PipeNameInUseException;
 import org.dnikulin.codon.pipe.except.PipeNameInvalidException;
 import org.dnikulin.codon.plugin.PluginNode;
 
-/** A plugin node that add pipe commands. */
+/** A plugin node that adds pipe commands. */
 public interface PipeCommandsPluginNode extends PluginNode {
     /**
      * Add pipe commands to a command registry.
