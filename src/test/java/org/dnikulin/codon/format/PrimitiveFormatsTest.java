@@ -29,9 +29,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 
+import org.dnikulin.codon.format.except.ObjectFormatException;
 import org.dnikulin.codon.format.primitive.DoubleObjectFormat;
 import org.dnikulin.codon.format.primitive.FloatObjectFormat;
 import org.dnikulin.codon.format.primitive.IntegerObjectFormat;
@@ -87,44 +89,48 @@ public class PrimitiveFormatsTest {
         Class<?> klass = format.getObjectClass();
         assertNotNull(klass);
 
-        for (Object object : objects) {
-            // Test must be called with non-null objects of the correct type
-            assertNotNull(object);
-            assertTrue(klass.isAssignableFrom(object.getClass()));
+        try {
+            for (Object object : objects) {
+                // Test must be called with non-null objects of the correct type
+                assertNotNull(object);
+                assertTrue(klass.isAssignableFrom(object.getClass()));
 
-            // Object must have consistent equals()
-            assertEquals(object, object);
+                // Object must have consistent equals()
+                assertEquals(object, object);
 
-            // Must encode to non-null bytes without errors
-            // Empty array is fine
-            byte[] bytes = format.encode(object);
-            assertNotNull(bytes);
+                // Must encode to non-null bytes without errors
+                // Empty array is fine
+                byte[] bytes = format.encode(object);
+                assertNotNull(bytes);
 
-            // Must decode to non-null object without errors
-            // Object must equal original object
-            // (as defined by the object class)
-            // May return same reference, assuming state is immutable
-            Object object2 = format.decode(bytes);
-            assertNotNull(object2);
-            assertEquals(object, object2);
+                // Must decode to non-null object without errors
+                // Object must equal original object
+                // (as defined by the object class)
+                // May return same reference, assuming state is immutable
+                Object object2 = format.decode(bytes);
+                assertNotNull(object2);
+                assertEquals(object, object2);
 
-            // Decoded object must encode to the SAME non-null bytes,
-            // but NOT the same reference, as it may be modified
-            byte[] bytes2 = format.encode(object2);
-            assertNotNull(bytes2);
-            assertNotSame(bytes, bytes2);
-            assertEquals(bytes.length, bytes2.length);
-            assertTrue(Arrays.equals(bytes, bytes2));
+                // Decoded object must encode to the SAME non-null bytes,
+                // but NOT the same reference, as it may be modified
+                byte[] bytes2 = format.encode(object2);
+                assertNotNull(bytes2);
+                assertNotSame(bytes, bytes2);
+                assertEquals(bytes.length, bytes2.length);
+                assertTrue(Arrays.equals(bytes, bytes2));
 
-            // Subsequent encodings must still be identical,
-            // but NOT the same reference, as it may be modified
-            byte[] bytes3 = format.encode(object2);
-            assertNotNull(bytes3);
-            assertNotSame(bytes, bytes3);
-            assertNotSame(bytes2, bytes3);
-            assertEquals(bytes.length, bytes3.length);
-            assertTrue(Arrays.equals(bytes, bytes3));
-            assertTrue(Arrays.equals(bytes2, bytes3));
+                // Subsequent encodings must still be identical,
+                // but NOT the same reference, as it may be modified
+                byte[] bytes3 = format.encode(object2);
+                assertNotNull(bytes3);
+                assertNotSame(bytes, bytes3);
+                assertNotSame(bytes2, bytes3);
+                assertEquals(bytes.length, bytes3.length);
+                assertTrue(Arrays.equals(bytes, bytes3));
+                assertTrue(Arrays.equals(bytes2, bytes3));
+            }
+        } catch (ObjectFormatException ex) {
+            fail();
         }
     }
 }

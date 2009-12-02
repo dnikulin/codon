@@ -24,6 +24,8 @@
 
 package org.dnikulin.codon.format;
 
+import org.dnikulin.codon.format.except.ObjectCorruptException;
+
 /** Serialisation format for objects of a specific class. */
 public interface ObjectFormat {
     /**
@@ -61,5 +63,5 @@ public interface ObjectFormat {
      *            Bytes to interpret
      * @return Object
      */
-    public Object decode(byte[] bytes);
+    public Object decode(byte[] bytes) throws ObjectCorruptException;
 }

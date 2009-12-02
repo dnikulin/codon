@@ -30,6 +30,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import org.dnikulin.codon.format.except.ObjectCorruptException;
+
 /** An ObjectFormat implemented using DataInputStream and DataOutputStream. */
 public abstract class StreamObjectFormat<T> implements ObjectFormat {
     @Override
@@ -48,14 +50,14 @@ public abstract class StreamObjectFormat<T> implements ObjectFormat {
     }
 
     @Override
-    public Object decode(byte[] bytes) {
+    public Object decode(byte[] bytes) throws ObjectCorruptException {
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         DataInputStream in = new DataInputStream(bis);
 
         try {
             return read(in);
         } catch (IOException ex) {
-            return null;
+            throw new ObjectCorruptException(ex);
         }
     }
 
@@ -66,7 +68,8 @@ public abstract class StreamObjectFormat<T> implements ObjectFormat {
      *            Input stream
      * @return Object
      */
-    public abstract T read(DataInputStream in) throws IOException;
+    public abstract T read(DataInputStream in) throws IOException,
+            ObjectCorruptException;
 
     /**
      * Write an object to a data output stream.

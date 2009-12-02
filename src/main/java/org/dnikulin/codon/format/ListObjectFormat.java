@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dnikulin.codon.format.except.ObjectCorruptException;
+
 /**
  * Object format for lists containing objects that are all supported by a
  * specific format.
@@ -68,7 +70,8 @@ public class ListObjectFormat extends StreamObjectFormat<List<?>> {
     }
 
     @Override
-    public List<?> read(DataInputStream in) throws IOException {
+    public List<?> read(DataInputStream in) throws IOException,
+            ObjectCorruptException {
         List<Object> list = new ArrayList<Object>();
 
         while (in.available() > 0) {
