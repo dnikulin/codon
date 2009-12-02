@@ -32,6 +32,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import org.dnikulin.codon.format.primitive.IntegerObjectFormat;
 import org.dnikulin.codon.format.primitive.StringObjectFormat;
 import org.junit.Test;
 
@@ -39,6 +40,12 @@ public class PrimitiveFormatsTest {
     @Test
     public void testString() {
         testFormat(StringObjectFormat.INSTANCE, "", "test", "1232s сдфadrde");
+    }
+
+    @Test
+    public void testInteger() {
+        testFormat(IntegerObjectFormat.INSTANCE, -7, 0, 7, Integer.MIN_VALUE,
+                Integer.MAX_VALUE);
     }
 
     public static void testFormat(ObjectFormat format, Object... objects) {
