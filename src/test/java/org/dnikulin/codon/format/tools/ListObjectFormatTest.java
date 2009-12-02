@@ -22,13 +22,14 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.codon.format;
+package org.dnikulin.codon.format.tools;
 
 import static org.dnikulin.codon.format.PrimitiveFormatsTest.testFormat;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import org.dnikulin.codon.format.ObjectFormat;
 import org.dnikulin.codon.format.primitive.StringObjectFormat;
 import org.junit.Test;
 

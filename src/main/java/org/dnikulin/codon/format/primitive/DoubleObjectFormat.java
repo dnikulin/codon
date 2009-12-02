@@ -28,7 +28,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import org.dnikulin.codon.format.StreamObjectFormat;
+import org.dnikulin.codon.format.tools.StreamObjectFormat;
 
 /** Object format supporting java.lang.Double */
 public class DoubleObjectFormat extends StreamObjectFormat<Double> {
