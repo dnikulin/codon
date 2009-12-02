@@ -330,8 +330,8 @@ public class PluginLoader extends ClassLoader {
         loadClasses(NODE_SUFFIX);
 
         // Give linker all classes for node construction
-        // Shortcut past getLoadedClasses()'s list constructor
-        linker.makePluginNodes(classes.values());
+        // Use copy of list since installations may modify the original
+        linker.makePluginNodes(getLoadedClasses());
     }
 
     // Package-private
