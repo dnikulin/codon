@@ -24,6 +24,9 @@
 
 package org.dnikulin.codon.format.primitive;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.dnikulin.codon.format.ObjectFormat;
@@ -53,6 +56,35 @@ public class StringObjectFormat implements ObjectFormat {
 
     @Override
     public Object decode(byte[] bytes) {
+        return new String(bytes, UTF8);
+    }
+
+    /**
+     * Write a string to the given output stream.
+     * 
+     * @param out
+     *            Data output stream
+     * @param str
+     *            String
+     */
+    public static void writeString(DataOutputStream out, String str)
+            throws IOException {
+        byte[] bytes = str.getBytes(UTF8);
+        out.writeInt(bytes.length);
+        out.write(bytes);
+    }
+
+    /**
+     * Read a string from the given input stream.
+     * 
+     * @param in
+     *            Data input stream
+     * @return String
+     */
+    public static String readString(DataInputStream in) throws IOException {
+        int length = in.readInt();
+        byte[] bytes = new byte[length];
+        in.read(bytes);
         return new String(bytes, UTF8);
     }
 }
