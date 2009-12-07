@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.dnikulin.codon.commands.BatchCommand;
+import org.dnikulin.codon.commands.ListFormatsCommand;
 import org.dnikulin.codon.commands.PluginCommand;
 import org.dnikulin.codon.format.primitive.DoubleObjectFormat;
 import org.dnikulin.codon.format.primitive.FloatObjectFormat;
@@ -161,6 +162,7 @@ public class CodonKernel implements LogSource {
         try {
             commands.add(new PluginCommand(pluginLinker, pluginLoader));
             commands.add(batchCommand);
+            commands.add(new ListFormatsCommand(formats));
         } catch (PipeException ex) {
             ex.printStackTrace();
         }
