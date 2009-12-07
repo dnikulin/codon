@@ -24,6 +24,8 @@
 
 package org.dnikulin.codon.format.registry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -39,6 +41,15 @@ public class ObjectFormats {
     public ObjectFormats() {
         byName = new TreeMap<String, ObjectFormat>();
         byClass = new TreeMap<String, ObjectFormat>();
+    }
+
+    /**
+     * Query registered object formats.
+     * 
+     * @return List of object formats
+     */
+    public synchronized List<ObjectFormat> getFormats() {
+        return new ArrayList<ObjectFormat>(byClass.values());
     }
 
     /**
