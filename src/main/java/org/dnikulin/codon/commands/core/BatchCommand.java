@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.codon.commands;
+package org.dnikulin.codon.commands.core;
 
 import static org.dnikulin.codon.command.CommandTools.printUsage;
 
@@ -101,6 +101,8 @@ public class BatchCommand implements EffectCommand {
      *            Line logger
      */
     public void runCommand(String line, LineLogger log) {
+        log.print("> " + line + "\n");
+
         try {
             parser.feed(line);
         } catch (PipeException ex) {

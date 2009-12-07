@@ -22,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.codon.commands;
+package org.dnikulin.codon.commands.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

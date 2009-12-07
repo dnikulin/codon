@@ -27,9 +27,9 @@ package org.dnikulin.codon;
 import java.io.File;
 import java.io.IOException;
 
-import org.dnikulin.codon.commands.BatchCommand;
-import org.dnikulin.codon.commands.ListFormatsCommand;
-import org.dnikulin.codon.commands.PluginCommand;
+import org.dnikulin.codon.commands.core.BatchCommand;
+import org.dnikulin.codon.commands.core.PluginCommand;
+import org.dnikulin.codon.commands.help.ListFormatsCommand;
 import org.dnikulin.codon.format.primitive.DoubleObjectFormat;
 import org.dnikulin.codon.format.primitive.FloatObjectFormat;
 import org.dnikulin.codon.format.primitive.IntegerObjectFormat;

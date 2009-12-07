@@ -22,58 +22,67 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package org.dnikulin.codon.commands;
+package org.dnikulin.codon.commands.core;
+
+import static org.dnikulin.codon.command.CommandTools.printUsage;
+
+import java.io.File;
 
 import org.dnikulin.codon.command.EffectCommand;
-import org.dnikulin.codon.format.ObjectFormat;
-import org.dnikulin.codon.format.registry.ObjectFormats;
 import org.dnikulin.codon.log.LineLogger;
+import org.dnikulin.codon.plugin.PluginLinker;
+import org.dnikulin.codon.plugin.PluginLoader;
 
-/** Command to list installed object formats. */
-public class ListFormatsCommand implements EffectCommand {
-    private final ObjectFormats formats;
+/** Command to import and install plugins. */
+public class PluginCommand implements EffectCommand {
+    private final PluginLinker linker;
+    private final PluginLoader loader;
 
     /**
-     * Construct the command with the given format registry.
+     * Construct a plugin command with the given plugin linker and loader.
      * 
-     * @param formats
-     *            Format registry
+     * @param linker
+     *            Plugin Linker
+     * @param loader
+     *            Plugin loader
      */
-    public ListFormatsCommand(ObjectFormats formats) {
-        this.formats = formats;
+    public PluginCommand(PluginLinker linker, PluginLoader loader) {
+        this.linker = linker;
+        this.loader = loader;
     }
 
     @Override
     public void execute(String[] args, LineLogger log) {
-        StringBuilder out = new StringBuilder();
-
-        out.append("Supported object formats:\n");
-
-        try {
-            for (ObjectFormat fmt : formats.getFormats()) {
-                String name = fmt.getFormatName();
-                String className = fmt.getObjectClass().getSimpleName();
-
-                String line = "  " + name + " (" + className + ")\n";
-                out.append(line);
-            }
-        } finally {
-            log.print(out.toString());
+        if (args.length != 1) {
+            printUsage(log, this);
+            return;
         }
+
+        String path = args[0];
+        File file = new File(path);
+
+        if (!file.exists()) {
+            log.print("Path '" + path + "' does not exist");
+            return;
+        }
+
+        // importTree performs importJar automatically
+        loader.importTree(file);
+        loader.givePluginLinkerNodes(linker);
     }
 
     @Override
     public String getCommandTopic() {
-        return "help";
+        return "core";
     }
 
     @Override
     public String getCommandName() {
-        return "listformats";
+        return "plugin";
     }
 
     @Override
     public String getCommandUsage() {
-        return "";
+        return "<jar or directory>";
     }
 }
