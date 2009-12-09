@@ -30,6 +30,7 @@ import java.io.IOException;
 import org.dnikulin.codon.commands.core.BatchCommand;
 import org.dnikulin.codon.commands.core.PluginCommand;
 import org.dnikulin.codon.commands.help.ListFormatsCommand;
+import org.dnikulin.codon.daemon.thread.DaemonThreads;
 import org.dnikulin.codon.format.primitive.DoubleObjectFormat;
 import org.dnikulin.codon.format.primitive.FloatObjectFormat;
 import org.dnikulin.codon.format.primitive.IntegerObjectFormat;
@@ -66,6 +67,8 @@ public class CodonKernel implements LogSource {
 
     private final ObjectFormats formats;
 
+    private final DaemonThreads daemonThreads;
+
     private final BatchCommand batchCommand;
 
     /** Construct a Codon kernel. */
@@ -82,6 +85,8 @@ public class CodonKernel implements LogSource {
         parser = new PipeShellParser(compiler);
 
         formats = new ObjectFormats();
+
+        daemonThreads = new DaemonThreads();
 
         batchCommand = new BatchCommand(parser);
 
@@ -138,6 +143,10 @@ public class CodonKernel implements LogSource {
 
     public ObjectFormats getObjectFormats() {
         return formats;
+    }
+
+    public DaemonThreads getDaemonThreads() {
+        return daemonThreads;
     }
 
     @Override
