@@ -24,7 +24,6 @@
 
 package org.dnikulin.codon.format.tools;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -40,8 +39,7 @@ public abstract class StreamObjectFormat<T> implements ObjectFormat {
     @SuppressWarnings("unchecked")
     public byte[] encode(Object object) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        BufferedOutputStream buffer = new BufferedOutputStream(bytes);
-        DataOutputStream out = new DataOutputStream(buffer);
+        DataOutputStream out = new DataOutputStream(bytes);
 
         try {
             write(out, (T) object);
