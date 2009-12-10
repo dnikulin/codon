@@ -41,7 +41,7 @@ import org.dnikulin.codon.pipe.except.PipeTypeException;
 /** A named pipe registry. Allows pipe lookup and connection by name. */
 public class PipeLinker {
     /** Valid pipe name regular expression. */
-    public static final String PIPE_NAME_EX = "[a-zA-Z][a-zA-Z0-9_]*";
+    public static final String PIPE_NAME_EX = "[a-zA-Z][a-zA-Z0-9_\\-]*";
 
     /** Valid pipe name regular expression as Pattern. */
     public static final Pattern PIPE_NAME_RE = Pattern.compile(PIPE_NAME_EX);
@@ -149,7 +149,7 @@ public class PipeLinker {
 
     /**
      * Checks if a pipe name is valid. Valid pipe names start with a letter and
-     * may follow with letters, numbers or underscores.
+     * may follow with letters, numbers, underscores or hyphens.
      * 
      * @return true iff the pipe name is valid
      */

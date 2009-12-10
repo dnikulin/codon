@@ -55,20 +55,22 @@ public class PipeLinkerTest {
         assertTrue(isPipeNameValid("a"));
         assertTrue(isPipeNameValid("Z"));
 
-        // Must not accept single number or underscore
+        // Must not accept single number, underscore or hyphen
         assertFalse(isPipeNameValid("2"));
         assertFalse(isPipeNameValid("_"));
+        assertFalse(isPipeNameValid("-"));
 
-        // Must accept letter followed by letters, numbers or underscores
+        // Must accept letter followed by letters, numbers, underscores, hyphens
         assertTrue(isPipeNameValid("az"));
         assertTrue(isPipeNameValid("a2"));
         assertTrue(isPipeNameValid("a_"));
         assertTrue(isPipeNameValid("aZ2"));
         assertTrue(isPipeNameValid("a2Z"));
         assertTrue(isPipeNameValid("a2Z_"));
+        assertTrue(isPipeNameValid("a2Z-df"));
 
         // Must not accept any character that is not
-        // a letter, number or underscore
+        // a letter, number, underscore, hyphen
         assertFalse(isPipeNameValid("#"));
         assertFalse(isPipeNameValid("a#"));
         assertFalse(isPipeNameValid("a_%"));
