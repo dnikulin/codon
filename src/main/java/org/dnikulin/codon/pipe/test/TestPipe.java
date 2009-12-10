@@ -26,6 +26,7 @@ package org.dnikulin.codon.pipe.test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.dnikulin.codon.pipe.simple.SimplePipe;
 
@@ -36,7 +37,7 @@ public class TestPipe extends SimplePipe {
 
     private final AtomicBoolean pass;
     private final AtomicLong counter;
-    private Object lastValue;
+    private final AtomicReference<Object> lastValue;
 
     /**
      * Construct a test pipe with the given input and output types.
@@ -52,7 +53,7 @@ public class TestPipe extends SimplePipe {
 
         pass = new AtomicBoolean(false);
         counter = new AtomicLong(0);
-        lastValue = null;
+        lastValue = new AtomicReference<Object>();
     }
 
     /**
@@ -99,11 +100,11 @@ public class TestPipe extends SimplePipe {
      *            Object value stored for lastValue()
      */
     @Override
-    public void consume(Object value) {
+    public synchronized void consume(Object value) {
         assert (inputType.isAssignableFrom(value.getClass()));
 
         counter.incrementAndGet();
-        lastValue = value;
+        lastValue.set(value);
 
         if (pass.get() == true) {
             produce(value);
@@ -117,7 +118,7 @@ public class TestPipe extends SimplePipe {
      * @return Last value given to consume()
      */
     public Object last() {
-        return lastValue;
+        return lastValue.get();
     }
 
     /**
