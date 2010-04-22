@@ -25,6 +25,8 @@
 package org.dnikulin.codon.command;
 
 import org.dnikulin.codon.log.LineLogger;
+import org.dnikulin.codon.pipe.Pipe;
+import org.dnikulin.codon.pipe.except.PipeFactoryException;
 
 /** Utility methods for shell commands. */
 public final class CommandTools {
@@ -40,6 +42,21 @@ public final class CommandTools {
         String name = cmd.getCommandName();
         String usage = cmd.getCommandUsage();
         log.print("Usage: " + name + " " + usage);
+    }
+
+    /**
+     * Print command usage suggestion to a line logger, and throw a
+     * PipeFactoryException.
+     * 
+     * @param log
+     *            Line logger
+     * @param cmd
+     *            Command
+     */
+    public static Pipe printPipeUsage(LineLogger log, Command cmd)
+            throws PipeFactoryException {
+        printUsage(log, cmd);
+        throw new PipeFactoryException("Pipe command arguments invalid");
     }
 
     private CommandTools() {
