@@ -29,7 +29,12 @@ import java.io.IOException;
 
 import org.dnikulin.codon.commands.core.BatchCommand;
 import org.dnikulin.codon.commands.core.PluginCommand;
+import org.dnikulin.codon.commands.core.SleepCommand;
 import org.dnikulin.codon.commands.help.ListFormatsCommand;
+import org.dnikulin.codon.commands.record.RecordCommand;
+import org.dnikulin.codon.commands.record.ReplayCommand;
+import org.dnikulin.codon.daemon.test.TestDaemonCommand;
+import org.dnikulin.codon.daemon.thread.DaemonThread;
 import org.dnikulin.codon.daemon.thread.DaemonThreads;
 import org.dnikulin.codon.format.primitive.DoubleObjectFormat;
 import org.dnikulin.codon.format.primitive.FloatObjectFormat;
@@ -159,6 +164,11 @@ public class CodonKernel implements LogSource {
         this.logger.setLineLogger(logger);
     }
 
+    public void joinDaemons() {
+        for (DaemonThread thread : daemonThreads.get())
+            thread.waitForJoin();
+    }
+
     private void addBaseFormats() {
         formats.add(StringObjectFormat.INSTANCE);
         formats.add(IntegerObjectFormat.INSTANCE);
@@ -172,12 +182,19 @@ public class CodonKernel implements LogSource {
             commands.add(new PluginCommand(pluginLinker, pluginLoader));
             commands.add(batchCommand);
             commands.add(new ListFormatsCommand(formats));
+            commands.add(new SleepCommand());
+
+            commands.add(new TestDaemonCommand(daemonThreads));
+
+            commands.add(new RecordCommand(formats));
+            commands.add(new ReplayCommand(formats, daemonThreads));
         } catch (PipeException ex) {
             ex.printStackTrace();
         }
     }
 
     private void addBaseSlots() {
+        pluginLinker.addPluginSlot(new CodonKernelPluginSlot(this));
         pluginLinker.addPluginSlot(new PluginLinkerPluginSlot(pluginLinker));
         pluginLinker.addPluginSlot(new PipeCommandsPluginSlot(commands));
         pluginLinker.addPluginSlot(new ObjectFormatsPluginSlot(formats));
