@@ -35,7 +35,7 @@ import org.dnikulin.codon.log.LineLogger;
 import org.dnikulin.codon.pipe.simple.SimplePipe;
 
 /** Pipe that records objects to a stream. */
-public class RecordPipe extends SimplePipe {
+public class RecordPipe extends SimplePipe implements Runnable {
     private final LineLogger log;
 
     private final ObjectFormat format;
@@ -64,6 +64,8 @@ public class RecordPipe extends SimplePipe {
         GZIPOutputStream gos = new GZIPOutputStream(bos1);
         BufferedOutputStream bos2 = new BufferedOutputStream(gos);
         this.stream = new DataOutputStream(bos2);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this));
     }
 
     @Override
@@ -94,6 +96,11 @@ public class RecordPipe extends SimplePipe {
         } finally {
             stream = null;
         }
+    }
+
+    @Override
+    public void run() {
+        close();
     }
 
     /** Force stream flush. The pipe will no longer record objects. */
