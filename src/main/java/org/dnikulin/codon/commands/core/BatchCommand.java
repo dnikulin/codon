@@ -101,7 +101,7 @@ public class BatchCommand implements EffectCommand {
      *            Line logger
      */
     public void runCommand(String line, LineLogger log) {
-        log.print("> " + line + "\n");
+        log.print("\n> " + line);
 
         try {
             parser.feed(line);
