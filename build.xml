@@ -8,6 +8,7 @@
     </path>
 
     <path id="classpath-test">
+        <pathelement location="lib/junit4.jar" />
         <pathelement location="bin/main" />
         <pathelement location="bin/test" />
     </path>
