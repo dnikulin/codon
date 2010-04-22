@@ -98,7 +98,6 @@ public class PipeShellParser {
         for (int i = 0; i < str.length(); i++)
             feed(str.charAt(i));
         feedEnd();
-        reset();
 
         compiler.stopCompile();
     }
